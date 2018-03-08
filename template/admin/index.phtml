@@ -1,0 +1,7 @@
+<ul class="list-group list-group-flush">
+<?php foreach($modules as $module): ?>
+	<?php if(!$module['disabled']):?>
+		<li class="list-group-item"><a href="<?=$router->url('', $module['url'])?>"><?=$module['name']?></a></li>
+	<?php endif;?>
+<?php endforeach; ?>
+</ul>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?= $title ?></title>
+		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/public/css/common.css">
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+		<script src="/public/scripts/common.js"></script>
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+		<?php foreach($scriptManager->getScripts() as $script): ?>
+			<script src='<?=PathManager::script($script)?>'></script>
+		<?php endforeach; ?>
+	</head>
+	<body>
+	<div class='container-fluid p-0 m-0'>
+		<div class="row m-0 p-0" id="top_wrapper">
+			<div class="col-10"><span class="align-middle system-naming-span">СЕД НКНТУ</span></div>
+			<div class="col-2 profile-info py-1 align-middle">
+				<?= $profile->get('email') ?>
+				<img src='/public/img/noavatar.png'>
+			</div>
+		</div>
+		<div id="content_wrapper" class="row">
+			<div class="col-2 p-0" id="left_side">
+				<div id="fixed-wrapper">
+					<ul>
+					<li><a href="/document/new/">Створити документ</a></li>
+					<li>Вхідні
+						<ul>
+							<li>Накази</li>
+							<li>Розпорядження</li>
+							<li>Листи</li>
+						</ul>
+					</li>
+					<li>Вихідні
+						<ul>
+							<li>Накази</li>
+							<li>Розпорядження</li>
+							<li>Листи</li>
+						</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-10 p-3" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
+		</div>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,51 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction()):
+	case 'add':
+	?>
+	<a class="btn btn-link" href="<?=$router->url()?>"><< Назад</a>
+	<form method ="post" action="<?=$router->url("add")?>">
+	<div class="form-group row">
+	<label class="col-2"><span class="align-middle">Назва привілегії:</span></label>
+	<input type="text" class="col-6 form-control" name="name" />
+	</div>
+	<div class="form-group row">
+	<label class="col-2"><span class="align-middle">Опис привілегії:</span></label>
+	<input type="text" class="col-6 form-control" name="desc" />
+	</div>
+	<input type="submit" class="btn btn-primary" name="Добавити" />
+	</form>
+	<?
+	break;
+	case 'edit':
+	?>
+	<a class="btn btn-link" href="<?=$router->url()?>"><< Назад</a>
+	<form method ="post" action="<?=$router->url("edit/".$permission['permission_id'])?>">
+	<div class="form-group row">
+	<label class="col-2"><span class="align-middle">Назва привілегії:</span></label>
+	<input type="text" class="col-6 form-control" name="name" value="<?=$permission['name']?>" />
+	</div>
+	<div class="form-group row">
+	<label class="col-2"><span class="align-middle">Опис привілегії:</span></label>
+	<input type="text" class="col-6 form-control" name="desc" value="<?=$permission['description']?>"/>
+	</div>
+	<input type="submit" class="btn btn-primary" name="Редагувати" />
+	</form>
+	<?
+	break;
+	default:
+	?>
+	<a class="btn btn-primary" href="<?=$router->url("add")?>">Додати привілегію</a>
+	<div class="groups-list">
+	<?php foreach($permissions as $permission): ?>
+		<div class="group p-2 m-1">
+		<?=$permission['name']?>
+		<a title="Редагувати" href="<?=$router->url("edit/".$permission['permission_id'])?>"><i class="fas fa-edit"></i></a>
+		<a title="Видалити" href="<?=$router->url("delete/".$permission['permission_id'])?>"><i class="fas fas-red fa-minus-circle"></i></a>
+		</div>
+	<?php endforeach; ?>
+	</div>
+<?php 
+	break; 
+endswitch;
+?>

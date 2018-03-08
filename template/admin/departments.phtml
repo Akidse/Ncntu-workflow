@@ -1,0 +1,106 @@
+<?php
+$sessionAlerts->display();
+function displayRecursiveDepartments($departments, $router)
+{
+	foreach($departments as $department)
+	{
+		$departmentObject = new Department($department['department_id']);
+		?>
+		<div class="department-block">
+			<?=$department['name']?>
+			<?if($department['main']):?><span class="badge badge-danger">Головна станція</span><?endif;?>
+			<?if($department['public']):?><span class="badge badge-primary">Публічна станція</span><?endif;?>
+			<?if(!empty($departmentObject->getPermissionsList())):?>
+				<span class="badge badge-info">дозволів: <?=count($departmentObject->getPermissionsList())?></span>
+			<?endif;?>
+			<span class="float-right buttons">
+				<a href="<?=$router->url("add/".$department['department_id'])?>" class="btn btn-success btn-sm">Додати</a>
+				<a href="<?=$router->url("edit/".$department['department_id'])?>" class="btn btn-info btn-sm">Ред.</a>
+				<a href="<?=$router->url("remove/".$department['department_id'])?>" class="btn btn-danger btn-sm">Видалити</a>
+				</span>
+		</div>
+			<?if($department['childs'] != null):?>
+				<div class="department-group">
+					<?=displayRecursiveDepartments($department['childs'], $router)?>
+				</div>
+			<?endif;?>
+		<?
+	}
+}
+switch($router->getAction())
+{
+	case 'add':
+	?>
+	<a href="<?=$router->url()?>" class="btn btn-link"><< Назад</a>
+	<form method="post" action="<?=$router->url("add/".$departmentId)?>">
+	<div class="form-group row">
+		<label class="col-1 col-form-label">Назва: </label>
+		<div class="col-4"><input class="form-control" name="name" /></div>
+	</div>
+	<div class="form-check">
+    	<label class="form-check-label">
+      		<input type="checkbox"  name="public" class="form-check-input">
+      		Публічна (доступна всім станціям)
+    	</label>
+
+    	<label class="form-check-label">
+      		<input type="checkbox"  name="main" class="form-check-input">
+      		Головна станція
+    	</label>
+    	<?php foreach($permissions as $permission): ?>
+    		<label class="form-check-label">
+      			<input type="checkbox"  name="<?=$permission['name']?>" class="form-check-input">
+      			<?=$permission['description']?>
+    		</label>
+    	<?php endforeach;?>
+	</div>
+	<button type="submit" class="btn btn-primary">Зберегти</button>
+	</form>
+	<?
+	break;
+	case 'edit':
+	?>
+	<a href="<?=$router->url()?>" class="btn btn-link"><< Назад</a>
+	<form method="post" action="<?=$router->url("edit/".$department->get('department_id'))?>">
+	<div class="form-group row">
+		<label class="col-1 col-form-label">Назва: </label>
+		<div class="col-4"><input class="form-control" name="name" value="<?=$department->get('name')?>"/></div>
+	</div>
+	<div class="form-check">
+    	<label class="form-check-label">
+      		<input type="checkbox" class="form-check-input" name="public" <?=($department->get('public')?'checked':null)?>>
+      		Публічна (доступна всім станціям)
+    	</label>
+    	<label class="form-check-label">
+      		<input type="checkbox" class="form-check-input" name="main" <?=($department->get('main')?'checked':null)?>>
+      		Головна станція
+    	</label>
+    	<?php foreach($permissions as $permission): ?>
+    		<label class="form-check-label">
+      			<input type="checkbox" class="form-check-input" name="<?=$permission['name']?>" <?=($department->getPermission($permission['name'])?'checked':null)?>>
+      			<?=$permission['description']?>
+    		</label>
+    	<?php endforeach;?>
+  	</div>
+	<button type="submit" class="btn btn-primary">Зберегти</button>
+	</form>
+	<?
+	break;
+	case 'remove':
+	?>
+	<a href="<?=$router->url()?>" class="btn btn-link"><< Назад</a>
+	<div class="m-2 alert alert-danger">Ви впевнені, що хочете видалити цю станцію?
+	<?=($departmentsToDelete == null?"Вона не містить ніяких підстанцій":"Вона містить наступні підстанції:")?>
+	</div>
+	<?=displayRecursiveDepartments($departmentsToDelete, $router)?>
+	<form method="post" action="<?=$router->url("remove/".$department['department_id'])?>">
+	<input type="submit" class="m-2 btn btn-block btn-danger" value="Видалити" name="submit" />
+	</form>
+	<?
+	break;
+	default:
+	?><div><a href="<?=$router->url('add/0')?>" class="m-2 btn btn-success">Додати станцію</a></div><?
+	displayRecursiveDepartments($departments, $router);
+	break;
+}
+?>

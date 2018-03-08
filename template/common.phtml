@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><?=Template::getTitle()?></title>
+		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/public/css/fontawesome-all.min.css">
+		<link rel="stylesheet" type="text/css" href="/public/css/common.css">
+		<link rel="shortcut icon" href="/public/img/favicon.png" type="image/png">
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+		<script src="/public/scripts/common.js"></script>
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+		<?php foreach($scriptManager->getScripts() as $script): ?>
+			<script src='<?=PathManager::script($script)?>'></script>
+		<?php endforeach; ?>
+	</head>
+	<body>
+		<?php include_once PathManager::template($templateType); ?>
+	</body>
+</html>

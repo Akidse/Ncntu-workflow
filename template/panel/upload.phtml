@@ -1,0 +1,96 @@
+<a class="btn btn-link" href="<?=$router->url('', 'panel/index')?>"><< Головна</a>
+
+<?=$sessionAlerts->display()?>
+<form id="documentsForm" method="post" action="<?=$router->url()?>">
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label>Назва документу:</label></span></div>
+		<div class="col-8"><input class="form-control" type="text" name="name" /></div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label>Опис документу:</label></span></div>
+		<div class="col-8"><textarea class="form-control" name="desc" rows="4"></textarea></div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label>Виберіть головний файл:</label></span></div>
+	    <div class="col-8 dropzone-form" id="mainFile">
+	    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label>Виберіть додатки(за потреби):</label></span></div>
+	    <div class="col-8 dropzone-form" id="additionalFiles">
+	    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+	<input type="submit" value="Відправити" class="btn btn-primary">
+</form>
+
+
+
+
+<script>
+$(document).ready(function()
+{
+	Dropzone.autoDiscover = false;
+
+	var mainFileId = [];
+	var additionFilesId = [];
+	var onMainFileSuccess = function(file, respond)
+	{
+		mainFileId = jQuery.parseJSON(respond)[0];
+		console.log(mainFileId);
+		additionFiles.processQueue();
+	};
+
+	var onAdditionFilesSuccess = function(file, respond)
+	{
+		additionFilesId = jQuery.parseJSON(respond);
+		$("#documentsForm").append('<input type="text" name="mainFileId" value="'+mainFileId+'" hidden/>');
+		$("#documentsForm").append('<input type="text" name="additionFilesId" value="'+additionFilesId+'" hidden/>');
+		$("#documentsForm").submit();
+	};
+
+	var mainFile =  new Dropzone("div#mainFile", {
+	    	url: "/api/files/upload",
+		    autoProcessQueue: false,
+		  	uploadMultiple: true,
+		  	parallelUploads: 10,
+		  	maxFiles: 1,
+		  	maxFilesize: 20,
+		  	createImageThumbnails: false,
+		  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+		  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+		  	init: function(){
+		  		this.on("success", function(file, respond){
+		  			onMainFileSuccess(file, respond);
+		  		});
+		  	}
+	    });
+	var additionFiles =  new Dropzone("div#additionalFiles", {
+	    	url: "/api/files/upload",
+		    autoProcessQueue: false,
+		  	uploadMultiple: true,
+		  	parallelUploads: 10,
+		  	maxFiles: 10,
+		  	maxFilesize: 20,
+		  	createImageThumbnails: false,
+		  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+		  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+		  	init: function(){
+		  		this.on("success", function(file, respond){
+		  			onAdditionFilesSuccess(file, respond);
+		  		});
+		  	}
+	    });
+
+
+		$("form input[type='submit']").on("click", function(e)
+		{
+		      e.preventDefault();
+		      e.stopPropagation();
+		      mainFile.processQueue();		
+		});
+});
+</script>

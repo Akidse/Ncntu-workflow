@@ -1,0 +1,137 @@
+<form id="documentForm" method="post" action="/panel/document/new/" enctype="multipart/form-data">
+	<div class="form-group">
+		<label>Тип:</label>
+		<select class="form-control" name="message_type">
+			<?php foreach($documentTypes as $documentType): ?>
+				<option value="<?=$documentType['type_id']?>"><?=$documentType['name']?></option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label>Текст:</label>
+		<textarea class="form-control" name="message"></textarea>
+	</div>
+
+	<div class="form-group">
+		<label>Виберіть документ:</label>
+	    <div id="myDropZone">
+	    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+
+	<div id="receiver-block" class="form-group">
+		<label>Отримувач:</label>
+		<select class="form-control" name="receiver_id"></select>
+	</div>
+	<div id="receive_users"></div>
+	<input type="submit" value="Відправити" class="btn btn-primary">
+</form>
+<script>
+$(document).ready(function()
+{
+	$("#receiver-block").departmentSelect();
+
+	$("#receiver-block > select").bind("onDepartmentChange", function()
+	{
+		var select = $(this)[0];
+
+		$.post("/api/users/getbydepartment", {'department_id' : select.value}, function(data)
+		{
+			var users = jQuery.parseJSON(data);
+			handleUsers(users);
+		});
+	});
+
+	$("#receive_users").on("click", ".user-receiver-block > .checkbox", function()
+	{
+		if($(this).parent().hasClass("active"))
+		{
+			$(this).parent().removeClass("active");
+			$("input[type=checkbox][value="+$(this).data("user-id")+"]").prop("checked", false);
+		}	
+		else
+		{
+			$(this).parent().addClass("active");
+			$("input[type=checkbox][value="+$(this).data("user-id")+"]").prop("checked", true);
+		}		
+	});
+	function handleUsers(users)
+	{
+		$("#receive_users").empty();
+		$("#receive_users").append("<h4>Отримувачі:</h4>");
+		for(var i = 0; i < users.length; i++)
+		{
+			$("#receive_users").append('<div class="row m-1 p-2 user-receiver-block"><div class="px-2 checkbox" data-user-id="'+users[i].user_id+'"></div><div><img style="width: 50px;" src="/public/img/'+users[i].avatar+'"></div><div class="col-11 px-2">'+users[i].last_name+' '+users[i].first_name+' '+users[i].middle_name+'</div></div>');
+			$("#receive_users").append('<input type="checkbox" hidden="true" name="users[]" value="'+users[i].user_id+'" />');
+		}
+	}
+
+	/*Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
+
+	  // The configuration we've talked about above
+	  autoProcessQueue: false,
+	  uploadMultiple: true,
+	  parallelUploads: 100,
+	  maxFiles: 100,
+
+	  // The setting up of the dropzone
+	  init: function() {
+	    var myDropzone = this;
+
+	    // First change the button to actually tell Dropzone to process the queue.
+	    this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
+	      // Make sure that the form isn't actually being sent.
+	      e.preventDefault();
+	      e.stopPropagation();
+	      myDropzone.processQueue();
+	    });
+
+	    // Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+	    // of the sending event because uploadMultiple is set to true.
+	    this.on("sendingmultiple", function() {
+	      // Gets triggered when the form is actually being sent.
+	      // Hide the success button or the complete form.
+	    });
+	    this.on("successmultiple", function(files, response) {
+	      // Gets triggered when the files have successfully been sent.
+	      // Redirect user or notify of success.
+	    });
+	    this.on("errormultiple", function(files, response) {
+	      // Gets triggered when there was an error sending the files.
+	      // Maybe show form again, and notify user of error
+	    });
+
+	    this.on("addedfile", function(files) {
+	      console.log("LOL");
+	    });
+	  }
+	 
+	}*/
+
+	Dropzone.autoDiscover = false;
+
+    var dropzone =  new Dropzone("div#myDropZone", {
+    	url: "/api/files/upload",
+	    autoProcessQueue: false,
+	  	uploadMultiple: true,
+	  	parallelUploads: 10,
+	  	maxFiles: 10,
+	  	maxFilesize: 20,
+	  	createImageThumbnails: false,
+	  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+	  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-10"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-2"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Remove</a></div>'
+    });
+
+    dropzone.on("addedfile", function(file) {
+	});
+
+	$("#documentForm input[type='submit']").on("click", function(e)
+	{
+	      e.preventDefault();
+	      e.stopPropagation();
+	      dropzone.processQueue();		
+	});
+});
+</script>

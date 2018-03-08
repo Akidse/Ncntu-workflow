@@ -1,0 +1,327 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction())
+{
+	case 'versions':
+	?>
+		<div class="documents-list">
+		<?php foreach($versions as $version): $versionAuthor = new User($version['editor_id']);?>
+		<div class="document m-1 p-2">
+			<div class="document-title">Версія від: <?=$version['time_created']?></div>
+			<div class="document-author">Автор змін: <?=$versionAuthor->getFullName()?></div>
+			<div class="document-desc">Змінено: <?=$version['time_deprecated']?></div>
+			<a class="btn btn-sm btn-primary" href="<?=$router->url('view/'.$document['document_id'].'/version/'.$version['version_id'])?>">Переглянути версію</a>
+		</div>
+		<?php endforeach;?>
+		</div>
+	<?
+	break;
+	case 'delete':
+	?>
+		<div class="alert alert-success">
+		Ви дійсно хочете видалити цей документ? Всі файли і версії будуть видалені незворотньо.
+		<a href="<?=$router->url('delete/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center">Видалити</a>
+		</div>
+	<?
+	break;
+	case 'create':
+	?>
+		<form id="documentsForm" method="post" action="<?=$router->url('/create/')?>">
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Назва документу:</label></span></div>
+				<div class="col-8"><input class="form-control" type="text" name="name" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Опис документу:</label></span></div>
+				<div class="col-8"><textarea class="form-control" name="desc" rows="4"></textarea></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Виберіть головний файл:</label></span></div>
+			    <div class="col-8 dropzone-form" id="mainFile">
+			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			        <div class="dropzone-previews"></div>
+			    </div>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Виберіть додатки(за потреби):</label></span></div>
+			    <div class="col-8 dropzone-form" id="additionalFiles">
+			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			        <div class="dropzone-previews"></div>
+			    </div>
+			</div>
+			<input type="submit" value="Відправити" class="btn btn-primary">
+		</form>
+	<?
+	break;
+	case 'edit':
+	?>
+		<form id="documentsForm" method="post" action="<?=$router->url('/edit/'.$document['document_id'])?>">
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Назва документу:</label></span></div>
+				<div class="col-8"><input class="form-control" type="text" name="name" value="<?=$document['name']?>" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Опис документу:</label></span></div>
+				<div class="col-8"><textarea class="form-control" name="desc" rows="4"><?=$document['description']?></textarea></div>
+			</div>
+			<div class="files-list">
+				<div class="main-file row form-group">
+					<div class="col-2"><h5>Файл:</h5></div>
+					<div class="col-8">
+						<div class="file p-1 pt-2 pb-2 m-1"  data-file-id="<?=$mainFile->get('file_id')?>">
+							<span class="format-icon format-<?=$mainFile->getFormat()?>"></span><span class="align-middle"><?=$mainFile->get('name')?></span>
+						</div>
+					</div>
+				</div>
+				<?php if(!empty($document['addition_id'])):?>
+					<div class="addition-files row form-group">
+						<div class="col-2"><h5>Додатки:</h5></div>
+						<div class="col-8">
+							<?php foreach($additionFiles as $file): ?>
+								<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
+								<span class="format-icon format-<?=$file->getFormat()?>"></span>
+								<span class="align-middle"><?=$file->get('name')?></span>
+								<a href="#"><i class="float-right p-2 align-middle text-rigth fas fa-minus-circle fas-red"></i></a>
+								</div>
+							<?php endforeach;?>
+						</div>
+					</div>
+				<?php endif;?>
+				<input type="text" hidden="true" name="files_to_remove"/>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Виберіть головний файл(поточний буде замінений):</label></span></div>
+			    <div class="col-8 dropzone-form" id="mainFile">
+			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			        <div class="dropzone-previews"></div>
+			    </div>
+			</div>
+			<div class="row form-group">
+				<div class="col-2"><span class="align-middle"><label>Виберіть додатки(за потреби):</label></span></div>
+			    <div class="col-8 dropzone-form" id="additionalFiles">
+			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			        <div class="dropzone-previews"></div>
+			    </div>
+			</div>
+			<input type="submit" value="Відправити" class="btn btn-primary">
+		</form>
+	<?
+	break;
+	case 'send-to-archive':
+	?>
+	<div class="alert alert-success">
+	Ви дійсно хочете направити цей документ в архів?
+	<a href="<?=$router->url('send-to-archive/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center">Направити</a>
+	</div>
+	<?php
+	break;
+	case 'view':
+	?>
+		<?php if($versionMode):?>
+			<div class="alert alert-info">
+				Це застаріла версія документу. 
+				Перейдіть до <a href="<?=$router->url('/view/'.$document['document_id'])?>">останньої версії</a>, щоб переглянути актуальний документ
+			</div>
+		<?php endif;?>
+		<div class="row" style="min-height: 100%">
+		<div class="col-5">
+		<h4><?=$document['name']?></h4>
+		<?=$document['description']?>
+		<?php if($versionMode): ?>
+			<div class="alert alert-warning mb-0">
+			<div><b>Змінено:</b> <?=$document['time_deprecated']?></div>
+			<div><b>Автор змін:</b> <?=$editor->getFullName()?></div>
+			</div>
+		<?php elseif($document['time_created'] != $document['time_updated']): ?>
+			<div>
+				<b>Оновлено:</b> <?=$document['time_updated']?>
+				<?php if($versionsCount > 0):?>
+					<a href="<?=$router->url('versions/'.$document['document_id'])?>">(змінено <?=$versionsCount?> разів)</a>
+				<?php endif;?>
+			</div>
+		<?php endif;?>
+		<div><b>Автор:</b> <?=$author->getFullName()?></div>
+		<div class="files-list">
+			<h5>Файл:</h5>
+			<div class="file active p-1 pt-2 pb-2 m-1"  data-file-id="<?=$mainFile->get('file_id')?>">
+				<span class="format-icon format-<?=$mainFile->getFormat()?>"></span>
+				<span class="align-middle"><?=$mainFile->get('name')?></span>
+				<a href="<?=$router->url('', 'api/files/get/'.$mainFile->get('file_id'))?>"><i class="float-right p-2 align-middle text-rigth fas fa-arrow-down"></i></a>
+			</div>
+			<?php if(!empty($document['addition_id'])):?>
+				<div class="addition-files">
+					<h5>Додатки:</h5>
+					<?php foreach($additionFiles as $file): ?>
+						<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
+						<span class="format-icon format-<?=$file->getFormat()?>"></span>
+						<span class="align-middle"><?=$file->get('name')?></span>
+						<a href="<?=$router->url('', 'api/files/get/'.$file->get('file_id'))?>"><i class="float-right p-2 align-middle text-rigth fas fa-arrow-down"></i></a>
+						</div>
+					<?php endforeach;?>
+				</div>
+			<?php endif;?>
+		</div>
+		<?php if(!$versionMode):?>
+			<?php if($isSentToArchive):?>
+				<button class="alert alert-light btn-block">Документ переданий в архів і очікує підтвердження</button>
+			<?php else: ?>
+				<div class="row pb-1">
+				<div class="col-6"><a class="btn btn-primary btn-block" href="<?=$router->url('send-to-archive/'.$document['document_id'])?>">Надіслати в архів</a></div>
+				<div class="col-6"><a class="btn btn-primary btn-block" href="<?=$router->url('edit/'.$document['document_id'])?>">Редагувати</a></div>
+				</div>
+			<?php endif; ?>
+			<a class="btn btn-danger btn-block" href="<?=$router->url('delete/'.$document['document_id'])?>">Видалити</a>
+		<? endif; ?>
+		</div>
+		<div class="col-7 previewer-container">
+		<?=$filePreviewer->display();?>
+		</div>
+		</div>
+	<?
+	break;
+	default:
+?>
+		<a class="btn btn-primary" href="<?=$router->url('create')?>">Завантажити документ</a>
+		<div class="documents-list">
+			<?php foreach($documents as $document): ?>
+				<div class="document m-1 p-2">
+				<a href="<?=$router->url('view/'.$document['document_id'])?>"><div class="document-title"><?=$document['name']?></div></a>
+				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
+				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
+				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
+				<?php if(!empty($document['addition_id'])):?>
+					<span class="badge badge-info"><?=count(explode(',', $document['addition_id']))?> додатків</span>
+				<?php endif;?>
+				</div>
+			<?php endforeach;?>
+		</div>
+
+		<?=$paginator?>
+<?php
+	break;
+} //endswitch ?>
+
+<?php if($router->getAction() == 'edit' || $router->getAction() == 'create'): ?>
+<script>
+$(document).ready(function()
+{
+	Dropzone.autoDiscover = false;
+
+	var mainFileId = [];
+	var additionFilesId = [];
+	var isEditForm = <?=($router->getAction() == 'edit'?1:0)?>;
+	var mainFile =  new Dropzone("div#mainFile", {
+	    	url: "/api/files/upload",
+		    autoProcessQueue: false,
+		  	uploadMultiple: true,
+		  	parallelUploads: 10,
+		  	maxFiles: 1,
+		  	maxFilesize: 20,
+		  	createImageThumbnails: false,
+		  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+		  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+		  	init: function(){
+		  		this.on("success", function(file, respond){
+		  			onMainFileSuccess(file, respond);
+		  		});
+		  	}
+	    });
+	var additionFiles =  new Dropzone("div#additionalFiles", {
+	    	url: "/api/files/upload",
+		    autoProcessQueue: false,
+		  	uploadMultiple: true,
+		  	parallelUploads: 10,
+		  	maxFiles: 10,
+		  	maxFilesize: 20,
+		  	createImageThumbnails: false,
+		  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+		  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+		  	init: function(){
+		  		this.on("success", function(file, respond){
+		  			onAdditionFilesSuccess(file, respond);
+		  		});
+		  	}
+	    });
+
+		var onMainFileSuccess = function(file, respond)
+		{
+			mainFileId = '';
+			if(respond != null)mainFileId = jQuery.parseJSON(respond)[0];
+			if(additionFiles.getActiveFiles().length > 0)additionFiles.processQueue();
+			else onAdditionFilesSuccess(null, null);
+		};
+
+		var onAdditionFilesSuccess = function(file, respond = null)
+		{
+			additionFilesId = '';
+			if(respond != null)additionFilesId = jQuery.parseJSON(respond);
+			$("#documentsForm").append('<input type="text" name="mainFileId" value="'+mainFileId+'" hidden/>');
+			$("#documentsForm").append('<input type="text" name="additionFilesId" value="'+additionFilesId+'" hidden/>');
+			$("#documentsForm").submit();
+		};
+
+		$("form input[type='submit']").on("click", function(e)
+		{
+		      e.preventDefault();
+		      e.stopPropagation();
+		      if(!isEditForm || mainFile.getActiveFiles().length > 0)mainFile.processQueue();
+		      else onMainFileSuccess(null, null);	
+		});
+});
+</script>
+<? endif; ?>
+<script>
+	var isEditForm = <?=($router->getAction() == 'edit'?1:0)?>;
+
+$(document).ready(function()
+{
+	function populateToDeleteInput(array)
+	{
+		var implodedArray = array.join();
+		$("input[name='files_to_remove']").attr("value", implodedArray);
+	}
+	if(isEditForm)
+	{
+		var toDeleteFiles = [];
+		$(".file a").on("click", function(event)
+		{
+			var file_id = $(this).parent().data('file-id');
+			console.log(toDeleteFiles.indexOf(file_id));
+			if(toDeleteFiles.indexOf(file_id) > -1)
+			{
+				toDeleteFiles.splice(toDeleteFiles.indexOf(file_id), 1);
+				$(this).parent().removeClass('to-delete');
+			}
+			else
+			{
+				toDeleteFiles.push(file_id);
+				$(this).parent().addClass('to-delete');		
+			}
+
+			populateToDeleteInput(toDeleteFiles);
+		});
+	}
+	else
+	{
+		$(".file a").on("click", function(event){event.stopPropagation();});
+		$(".file").on("click", function(event){
+		$(".file").removeClass("active");
+		$(this).addClass("active");
+		$.get("/api/files/previewer/"+$(this).data('file-id'), {}, function(data)
+		{
+			$(".previewer-container").html(data);
+		});
+	});
+	}
+});
+function addFileToRemoveList(elem)
+{
+	var file_id = $(elem).parent().data('file-id');
+
+	if($("input[name='files_to_remove']").value().length > 0)
+	{
+		$("input[name='files_to_remove']").attr("value", $("input[name='files_to_remove']").value()+','+file_id);
+	}
+	else $("input[name='files_to_remove']").attr("value", file_id);
+}
+</script>

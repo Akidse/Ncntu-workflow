@@ -1,0 +1,11 @@
+<form id="departments" class="p-4" method="post" action="<?=$router->getRoute()?>">
+<?php foreach($users as $user): ?>
+<div class="row"><label class="col-3"><span class="align-middle"><?=$user['first_name']?> <?=$user['middle_name']?> <?=$user['last_name']?></span></label>
+<div class="form-group col-4"><select class="form-control col-4" name="department_<?=$user['user_id']?>" data-selected-option="<?=$user['department_id']?>"></select></div></div>
+<?php endforeach; ?>
+<div class="form-group"><input type="submit" class="btn btn-primary btn-block" value="Save"/></div>
+</form>
+
+<script>
+$("#departments").departmentSelect();
+</script>

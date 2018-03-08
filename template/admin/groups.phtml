@@ -1,0 +1,60 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction()):
+	case 'permissions':
+	?>
+	<h3>Виставте галочки напроти прав: </h3>
+		<form class="groups-list" method="post" action="<?=$router->url('/permissions/'.$group['group_id'])?>">
+		<?php foreach($permissionsList as $permission): 
+			$isPermitted = Database::query("SELECT COUNT(*) FROM `users_groups_permitted` WHERE `permission_id` = ? AND `group_id` = ?",
+				[$permission['permission_id'], $group['group_id']]);
+		?>
+			<div class="group p-2">
+				<input type="checkbox" <?=($isPermitted?'checked':'')?> name="<?=$permission['name']?>">
+					<?=$permission['description']?>
+			</div>
+		<?php endforeach; ?>
+		<input type="submit" name="submit" class="btn btn-primary m-2" value="Зберегти" />
+		</form>
+	<?
+	break;
+	case 'add':
+	?>
+	<a class="btn btn-link" href="<?=$router->url()?>"><< Назад</a>
+	<form method ="post" action="<?=$router->url("add")?>">
+	<div class="form-group row">
+	<label class="col-1"><span class="align-middle">Назва групи:</span></label>
+	<input type="text" class="col-6 form-control" name="name" />
+	</div>
+	<input type="submit" class="btn btn-primary" name="Добавити" />
+	</form>
+	<?
+	break;
+	case 'edit':
+	?>
+	<a class="btn btn-link" href="<?=$router->url()?>"><< Назад</a>
+	<form method ="post" action="<?=$router->url("edit/".$group['group_id'])?>">
+	<div class="form-group row">
+	<label class="col-1"><span class="align-middle">Назва групи:</span></label>
+	<input type="text" class="col-6 form-control" name="name" value="<?=$group['name']?>" />
+	</div>
+	<input type="submit" class="btn btn-primary" name="Редагувати" />
+	</form>
+	<?
+	break;
+	default:
+	?>
+	<a class="btn btn-primary" href="<?=$router->url("add")?>">Додати групу користувачів</a>
+	<div class="groups-list">
+	<?php foreach($groups as $group): ?>
+		<div class="group p-2 m-1">
+		<?=$group['name']?>
+		<a title="Редагувати" href="<?=$router->url("edit/".$group['group_id'])?>"><i class="fas fa-edit"></i></a>
+		<a title="Додати дозволи" href="<?=$router->url("permissions/".$group['group_id'])?>"><i class="fas fas-green fa-plus"></i></a>
+		</div>
+	<?php endforeach; ?>
+	</div>
+<?php 
+	break; 
+endswitch;
+?>

@@ -201,9 +201,14 @@ switch($router->getAction())
 	break;
 
 	case 'view':
-	if(empty($router->getParams(0)) || empty(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `document_id` = ? AND `department_id` = ?", 
-		[intval($router->getParams(0)), $profile->get('department_id')])))$router->redirect($router->url());
+	if(empty($router->getParams(0)) || empty(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `document_id` = ?", 
+		[intval($router->getParams(0))])))$router->redirect($router->url());
+
 	$document = Database::query("SELECT * FROM `departments_documents` WHERE `document_id` = ?", [intval($router->getParams(0))], Database::SINGLE);
+
+	if(!$profile->hasPermission('handle_archive') && $document['department_id'] != $profile->get('department_id') && !$document['is_archived'])
+		$router->redirect($router->url());
+
 	$versionMode = false;
 	if(!empty($router->getParams('version')))
 	{
@@ -236,11 +241,11 @@ switch($router->getAction())
 	default:
 	$resultsPerPages = 10;
 
-	$paginator = new Paginator(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ?",[intval($profile->get('department_id'))]),
+	$paginator = new Paginator(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0",[intval($profile->get('department_id'))]),
 		$resultsPerPages, (!empty($router->getParams(0))?$router->getParams(0):null), '/panel/documents/page/(:num)');
 
 	Database::setNextLimit($paginator->getDBLimit(), $resultsPerPages);
-	$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? ORDER BY `document_id` DESC", [intval($profile->get('department_id'))]);
+	$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 ORDER BY `document_id` DESC", [intval($profile->get('department_id'))]);
 
 	Template::setTitle('Документи станції');
 	break;

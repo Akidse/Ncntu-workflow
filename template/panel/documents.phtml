@@ -161,7 +161,7 @@ switch($router->getAction())
 				</div>
 			<?php endif;?>
 		</div>
-		<?php if(!$versionMode):?>
+		<?php if(!$versionMode && !$document['is_archived']):?>
 			<?php if($isSentToArchive):?>
 				<button class="alert alert-light btn-block">Документ переданий в архів і очікує підтвердження</button>
 			<?php else: ?>

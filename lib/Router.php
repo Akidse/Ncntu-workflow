@@ -103,7 +103,7 @@ class Router
 		}
 		else if(is_string($index))
 		{
-			if(array_search($index, $this->params) && count($this->params) > array_search($index, $this->params) + 1)
+			if(array_search($index, $this->params) !== false && count($this->params) > array_search($index, $this->params))
 			{
 				return $this->params[array_search($index, $this->params) + 1];
 			}

@@ -1,0 +1,48 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction())
+{
+	case 'requests':
+	?>
+	<h4>Перелік заявок, надісланих в архів:</h4>
+		<div class="documents-list">
+		<?php foreach($requests as $request): 
+			$document = Database::query("SELECT * FROM `departments_documents` WHERE `document_id` = ?", [$request['document_id']], Database::SINGLE);
+			$department = new Department($document['department_id']);
+			$author = new User($request['user_id']);
+		?>
+			<div class="document m-1 p-2">
+				<div class="document-title"><b>Тип заявки:</b> передача в архів</div>
+				<div class="document-desc">Документ: <a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><?=$document['name']?></a>, <?=$department->get('name')?></div>
+				<div class="document-desc">Автор заявки: <?=$author->getFullName()?></div>
+				<div class="document-desc">Час створення: <?=$request['time']?></div>
+				<a class="btn btn-sm btn-primary" href="<?=$router->url('/requests/confirm/'.$request['request_id'])?>">Підтвердити</a>
+				<a class="btn btn-sm btn-danger" href="<?=$router->url('/requests/reject/'.$request['request_id'])?>">Відхилити</a>
+			</div>
+		<? endforeach;?>
+		</div>
+	<?
+	break;
+	default:
+	?>
+	<h4>Перелік документів в архіві:</h4>
+		<div class="documents-list">
+			<?php foreach($documents as $document): 
+				$department = new Department($document['department_id']);
+			?>
+				<div class="document m-1 p-2">
+				<a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><div class="document-title"><?=$document['name']?></div></a>
+				<div class="document-author">Станція: <b><?=$department->get('name')?></b></div>
+				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
+				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
+				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
+				<?php if(!empty($document['addition_id'])):?>
+					<span class="badge badge-info"><?=count(explode(',', $document['addition_id']))?> додатків</span>
+				<?php endif;?>
+				</div>
+			<?php endforeach;?>
+		</div>
+	<?
+	break;
+}
+?>

@@ -53,7 +53,7 @@
 						</ul>
 					</li>
 				<?php if($profile->hasPermission('handle_archive')): ?>
-					<li>Архів
+					<li><a href="<?=$router->url('', 'panel/archive')?>">Архів</a>
 						<ul>
 							<li><a href="<?=$router->url('requests', 'panel/archive')?>">Вхідні заявки</a></li>
 						</ul>

@@ -5,11 +5,17 @@
 		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="/public/css/fontawesome-all.min.css">
 		<link rel="stylesheet" type="text/css" href="/public/css/common.css">
+		<?php foreach(Template::getCssFiles() as $style): ?>
+			<link rel="stylesheet" type="text/css" href="<?=PathManager::style($style)?>">
+		<?php endforeach; ?>
 		<link rel="shortcut icon" href="/public/img/favicon.png" type="image/png">
 		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 		<script src="/public/scripts/common.js"></script>
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 		<?php foreach($scriptManager->getScripts() as $script): ?>
+			<script src='<?=PathManager::script($script)?>'></script>
+		<?php endforeach; ?>
+		<?php foreach(Template::getJsFiles() as $script): ?>
 			<script src='<?=PathManager::script($script)?>'></script>
 		<?php endforeach; ?>
 	</head>

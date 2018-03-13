@@ -16,6 +16,11 @@ class PathManager
 		if($shortUrl)return '/public/scripts/'.$scriptName.'.js';
 		return self::getRootDirectory().'/public/scripts/'.$scriptName.'.js';
 	}
+	public static function style($styleName, $shortUrl = true)
+	{
+		if($shortUrl)return '/public/css/'.$styleName.'.css';
+		return self::getRootDirectory().'/public/css/'.$styleName.'.css';		
+	}
 	public static function module($module)
 	{
 		$moduleTypeName = ($module->getTypeName() == null ? '' : $module->getTypeName().'/');

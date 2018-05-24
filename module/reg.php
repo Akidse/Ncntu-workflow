@@ -7,7 +7,7 @@ if($authorizeSession->isAuthorized())
 
 Template::setTitle(_("Registration"));
 Template::setBackButtonUrl($router->url("", "auth"));
-
+$captcha = new CaptchaFactory();
 $postHandler = new PostRequestHandler([
 		'fields' => [
 			'email' => [
@@ -34,11 +34,7 @@ $postHandler = new PostRequestHandler([
 				'required' => true,
 
 				'type' => PostRequestHandler::STRING_TYPE,
-			],
-			'g-recaptcha-response' => [
-				'required' => true,
-				'type' => PostRequestHandler::STRING_TYPE,
-			],
+			]
 		],
 		'validators' => [
 			'email' => [
@@ -86,9 +82,6 @@ if(isset($_POST['submit_form']))
 		if(!$postHandler->isValid('middle_name'))$sessionAlerts->add(_("Middle name is empty or it's length is not valid"), "error");
 		if(!$postHandler->isValid('last_name'))$sessionAlerts->add(_("Last name is empty or it's length is not valid"), "error");
 
-		$recaptcha = new \ReCaptcha\ReCaptcha(Config::get('recaptcha_private_key'));
-		$recaptchaResponse = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
-
 		if($postHandler->get('password') != $postHandler->get('password_confirm'))
 		{
 			$sessionAlerts->add(_("Passwords have to be the same"), "error");
@@ -107,7 +100,7 @@ if(isset($_POST['submit_form']))
 			$postHandler->setValid(false);
 		}
 
-		if(!$recaptchaResponse->isSuccess())
+		if(!$captcha->verify())
 		{
 			$sessionAlerts->add(_("Captcha is not valid"), "error");
 			$postHandler->setValid(false);

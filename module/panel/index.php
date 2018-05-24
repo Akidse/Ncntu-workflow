@@ -1,5 +1,6 @@
 <?php
 Template::setTitle(_("User panel"));
+$sessionAlerts = new SessionAlerts();
 Database::setNextLimit(0, 3);
 $lastDocuments = Database::query("SELECT `document_id`, `name`, `user_id` FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = 0 ORDER BY `document_id` DESC",
 	[$profile->get('department_id')]);

@@ -7,7 +7,7 @@
 <p><label><?=_("E-mail")?>:</label><input class="form-control" type="text" name="email"></p>
 <p><label><?=_("Password")?>:</label><input class="form-control" type="password" name="password"></p>
 <p><label><?=_("Password confirm")?>: </label><input class="form-control" type="password" name="password_confirm"></p>
-<div class="g-recaptcha" data-sitekey="<?=Config::get('recaptcha_public_key')?>"></div>
+<?=$captcha->display()?>
 <p class="text-center">
 	<input class="btn btn-block btn-primary" type="submit" value="Register" name="submit_form">
 	<a href="/"><?=_('Back to main page')?></a>

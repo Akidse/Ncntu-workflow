@@ -74,6 +74,6 @@ class User
 
 	public function updateData()
 	{
-		if($this->profileType == self::TYPE_USER)$this->userData = Database::query("SELECT * FROM `users` WHERE `user_id` = ?", [$this->get('user_id')], Database::SINGLE);
+		$this->userData = Database::query("SELECT * FROM `users` WHERE `user_id` = ?", [$this->get('user_id')], Database::SINGLE);
 	}
 }

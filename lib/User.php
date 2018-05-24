@@ -68,7 +68,7 @@ class User
 
 	public function getAvatar()
 	{
-		if(empty($this->get('avatar')))return PathManager::avatar('noavatar.png', true);
+		if(empty($this->get('avatar')))return PathManager::image('noavatar.png', true);
 		return PathManager::avatar($this->get('avatar'), true);
 	}
 

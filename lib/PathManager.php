@@ -17,6 +17,12 @@ class PathManager
 		return self::getRootDirectory().'/public/scripts/'.$scriptName.'.js';
 	}
 
+	public static function image($imageName, $isUrl = true)
+	{
+		if($isUrl)return '/public/img/'.$imageName;
+		return self::getRootDirectory().'/public/img/'.$imageName;
+	}
+
 	public static function style($styleName, $isUrl = true)
 	{
 		if($isUrl)return '/public/css/'.$styleName.'.css';

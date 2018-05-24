@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SEDNKNTU\n"
-"POT-Creation-Date: 2018-05-24 21:08+0300\n"
-"PO-Revision-Date: 2018-05-24 21:11+0300\n"
+"POT-Creation-Date: 2018-05-24 21:35+0300\n"
+"PO-Revision-Date: 2018-05-24 21:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: uk_UA\n"
@@ -132,7 +132,7 @@ msgstr "База даних приєднана"
 
 #: module/install.php:189
 msgid "Could not connect to database:"
-msgstr "Проблеми з підключенням до бази даних"
+msgstr "Проблеми з підключенням до бази даних:"
 
 #: module/panel/archive.php:17
 msgid "Document added to archive"
@@ -377,7 +377,7 @@ msgid ""
 "Are you sure you want to remove this user? All data will be removed too."
 msgstr ""
 "Ви дійсно хочете видалити цього користувача? Всі дані будуть видалені "
-"беззворотньо"
+"беззворотньо."
 
 #: template/auth.phtml:3 template/reg.phtml:7
 msgid "E-mail"
@@ -412,7 +412,7 @@ msgstr "Зареєструватись"
 #: template/install.phtml:50 template/install.phtml:91
 #: template/install.phtml:128
 msgid "Database"
-msgstr "База даних"
+msgstr "БД"
 
 #: template/install.phtml:12 template/install.phtml:25
 #: template/install.phtml:51 template/install.phtml:92
@@ -456,7 +456,7 @@ msgstr "Зараз потрібно створити адміністратор�
 
 #: template/install.phtml:60
 msgid "E-mail:"
-msgstr "E-mail"
+msgstr "E-mail:"
 
 #: template/install.phtml:64 template/reg.phtml:4
 msgid "Last name"
@@ -500,7 +500,7 @@ msgstr "База даних уже підключена!"
 
 #: template/install.phtml:138
 msgid "First of all we need connection to database:"
-msgstr "Для початку потрібно приєднати базу даних"
+msgstr "Для початку потрібно приєднати базу даних:"
 
 #: template/install.phtml:141
 msgid "Host"

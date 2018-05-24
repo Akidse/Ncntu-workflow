@@ -9,8 +9,14 @@ define('ROOT', dirname(__FILE__));
 session_start();
 include_once ROOT."/lib/autoload.php";
 
+if(!file_exists(PathManager::data('config.ini')))
+	copy(PathManager::data('config_default.ini'), PathManager::data('config.ini'));
+
 Config::load(ROOT."/data/config.ini");
 Config::save();
+
+$profile = new GuestProfile();
+include_once ROOT."/lib/locale.php";
 
 if(!empty(Config::get('db_host')) && !empty(Config::get('db_user')) && !empty(Config::get('db_name')))
 Database::connect(Config::get("db_host"), Config::get("db_user"), Config::get("db_password"), Config::get("db_name"));
@@ -36,17 +42,11 @@ if($authorizeSession->try())
 {
 	$profile = new UserProfile($authorizeSession->getUserId());
 }
-else
-{
-	$profile = new GuestProfile();
-}
 
 if(!$router->isAvailableForGuests() && !$profile->isLogged())
 {
 	$router->redirect('');
 }
-
-include_once ROOT."/lib/locale.php";
 
 include_once PathManager::module(new Module("module.settings", $router->getModule()->getType()));
 

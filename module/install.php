@@ -179,10 +179,20 @@ switch($router->getQuery('step'))
 					Config::set('db_password', $postHandler->get('password'));
 					Config::set('db_name', $postHandler->get('database_name'));
 					Config::save();
-					$tables_schema = file_get_contents(PathManager::data('schemas/tables_schema.sql'));
-					Database::query($tables_schema);
-					$sessionAlerts->add(_("Database connected"), "success");
-					$router->redirect($router->url("/?step=2"));
+					if(empty(Database::query("SHOW TABLES")))
+					{
+						$tables_schema = file_get_contents(PathManager::data('schemas/tables_schema.sql'));
+						Database::query($tables_schema);
+						$sessionAlerts->add(_("Database connected"), "success");
+						$router->redirect($router->url("/?step=2"));	
+					}
+					else
+					{
+						Config::set('isInstalled', 1);
+						Config::save();
+						$router->redirect($router->url());
+					}
+					
 				}
 				catch (PDOException $e)
 				{

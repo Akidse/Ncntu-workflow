@@ -35,7 +35,6 @@
 				</div>
 			</div>
 			</div>
-			<?if(!empty($profile->getDepartment())):?>
 				<ul class="left-menu">
 				<li><a href="<?=$router->url('', 'admin/users')?>"><?=_("Users management")?></a></li>
 				<li><a href="<?=$router->url('', 'admin/departments')?>"><?=_("Departments management")?></a></li>
@@ -43,7 +42,6 @@
 				<li><a href="<?=$router->url('', 'admin/system')?>"><?=_("System settings")?></a></li>
 				<li><a href="<?=$router->url('', 'admin/logs')?>"><?=_("Logs and statistics")?></a></li>
 				</ul>
-			<?endif;?>
 			</div>
 		</div>
 		<div class="col-10 p-0" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>

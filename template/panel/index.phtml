@@ -8,7 +8,7 @@
 					<?=$document['name']?>
 				</a>
 			<?php endforeach;?>
-			<?php if(!count($lastDecrees)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
+			<?php if(!count($lastDocuments)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
 			<a href="<?=$router->url("", "panel/documents")?>" class="content-box-seemore p-2"><?=_("Go to documents")?></a>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 					<?=$prescription['name']?>
 				</a>
 			<?php endforeach;?>
-			<?php if(!count($lastDecrees)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
+			<?php if(!count($lastPrescriptions)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
 			<a href="<?=$router->url("", "panel/prescriptions")?>" class="content-box-seemore p-2"><?=_("Go to prescriptions")?></a>
 		</div>
 	</div>

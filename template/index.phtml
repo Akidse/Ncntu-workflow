@@ -3,22 +3,22 @@
 		<?=$sessionAlerts->display()?>
 		<form class="auth-form" method="post" action="<?=$router->url('', 'auth')?>">
 			<div class="form-group">
-				<label>Name or E-mail:</label>
+				<label><?=_("Name or E-mail")?>:</label>
 				<input class="form-control" type="text" name="login" />
 			</div>
 			<div class="form-group">
-				<label>Password:</label>
+				<label><?=_("Password")?>:</label>
 				<input class="form-control" type="password" name="password" />
 			</div>
 			<div class="form-check">
 			    <label class="form-check-label">
 			      <input name="save-cookie" type="checkbox" class="form-check-input">
-			      Stay in system
+			      <?=_("Stay in system")?>
 			    </label>
 			  </div>
-			<button type="submit" class="btn btn-primary btn-block">Log in</button>
-			<a href="#" class="grey-link">Forgot password?</a>
-			<a href="#" class="float-right">Register</a>
+			<button type="submit" class="btn btn-primary btn-block"><?=_("Log in")?></button>
+			<a href="#" class="grey-link"><?=_("Forgot password")?>?</a>
+			<a href="<?=$router->url("", "reg")?>" class="float-right"><?=_("Register")?></a>
 		</form>
 	</div>
 <?php endif; ?>

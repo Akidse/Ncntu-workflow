@@ -1,0 +1,26 @@
+<?php $sessionAlerts->display()?>
+<form class="col-4 m-2" method="post" action="<?=$router->getRoute()?>">
+<div class="form-group">
+	<label><?=_("Default title")?>:</label>
+	<input class="form-control" type="text" name="default_page_title" value="<?=Config::get('default_page_title')?>">
+</div>
+<div class="form-group">
+	<label><?=_("Default locale")?>:</label>
+	<input class="form-control" type="text" name="default_locale" value="<?=Config::get('default_locale')?>">
+</div>
+<div class="form-group">
+	<label><?=_("Recaptcha public key")?>:</label>
+	<input class="form-control" type="text" name="recaptcha_public_key" value="<?=Config::get('recaptcha_public_key')?>">
+</div>
+<div class="form-group">
+	<label><?=_("Recaptcha private key")?>:</label>
+	<input class="form-control" type="text" name="recaptcha_private_key" value="<?=Config::get('recaptcha_private_key')?>">
+</div>
+<div class="form-group">
+	<label><?=_("Max file size (bytes)")?>:</label>
+	<input class="form-control" type="text" name="max_file_size" value="<?=Config::get('max_file_size')?>">
+</div>
+<div class="form-group">
+	<input class="btn btn-primary" type="submit" value="<?=_("Save")?>">
+</div>
+</form>

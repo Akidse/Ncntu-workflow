@@ -25,6 +25,8 @@ $postHandler = new PostRequestHandler([
 				],
 		]);
 $sessionAlerts = new SessionAlerts();
+Template::setTitle(_("Groups permissions management")." - "._("Admin panel"));
+Template::setBackButtonUrl($router->url("", 'admin/users'));
 switch($router->getAction())
 {
 	case 'delete':

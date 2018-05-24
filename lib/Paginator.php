@@ -9,8 +9,8 @@ class Paginator
     protected $currentPage;
     protected $urlPattern;
     protected $maxPagesToShow = 10;
-    protected $previousText = 'Previous';
-    protected $nextText = 'Next';
+    protected $previousText = 'Попередня';
+    protected $nextText = 'Наступна';
     /**
      * @param int $totalItems The total number of items.
      * @param int $itemsPerPage The number of items per page.
@@ -248,9 +248,9 @@ class Paginator
         if ($this->numPages <= 1) {
             return '';
         }
-        $html = '<ul class="pagination">';
+        $html = '<ul class="m-2 pagination">';
         if ($this->getPrevUrl()) {
-            $html .= '<li class="page-item"><a class="page-link" href="' . $this->getPrevUrl() . '">&laquo; '. $this->previousText .'</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="' . $this->getPrevUrl() . '">&laquo; '. gettext($this->previousText) .'</a></li>';
         }
         foreach ($this->getPages() as $page) {
             if ($page['url']) {
@@ -260,7 +260,7 @@ class Paginator
             }
         }
         if ($this->getNextUrl()) {
-            $html .= '<li class="page-item"><a class="page-link" href="' . $this->getNextUrl() . '">'. $this->nextText .' &raquo;</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="' . $this->getNextUrl() . '">'. gettext($this->nextText) .' &raquo;</a></li>';
         }
         $html .= '</ul>';
         return $html;

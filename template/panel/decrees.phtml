@@ -1,0 +1,177 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction())
+{
+	case 'remove':
+	?>
+	<div class="m-2 alert alert-warning">
+		<?=_("Are you sure to remove this decree?")?> 
+		<a class="btn btn-danger" href="<?=$router->url('remove-confirm/'.$decree['decree_id'])?>"><?=_("Remove")?></a>
+	</div>
+	<?php
+	break;
+	case 'view':
+	?>
+		<?=($profile->hasPermission('handle_decrees')?
+		'<div class="toolbar"><a href="'.$router->url('remove/'.$decree['decree_id']).'"class="btn btn-danger">'._('Remove').'</a></div>':null)?>
+		<div class="row m-2" style="min-height: 90%">
+		<div class="col-5 pl-0">
+		<h4><?=$decree['name']?></h4>
+		<?=$decree['description']?>
+		<div><b><?=_("Author")?>:</b> <?=$author->getFullName()?></div>
+		<div class="files-list">
+			<h5><?=_("File")?>:</h5>
+			<div class="file active p-1 pt-2 pb-2 m-1"  data-file-id="<?=$mainFile->get('file_id')?>">
+				<span class="format-icon format-<?=$mainFile->getFormat()?>"></span>
+				<span class="align-middle"><?=$mainFile->get('name')?></span>
+				<a href="<?=$router->url('', 'api/files/get/'.$mainFile->get('file_id'))?>"><i class="float-right p-2 align-middle text-rigth fas fa-arrow-down"></i></a>
+			</div>
+			<?php if(!empty($decree['additions_id'])):?>
+				<div class="addition-files">
+					<h5><?=_("Addition files")?>:</h5>
+					<?php foreach($additionFiles as $file): ?>
+						<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
+						<span class="format-icon format-<?=$file->getFormat()?>"></span>
+						<span class="align-middle"><?=$file->get('name')?></span>
+						<a href="<?=$router->url('', 'api/files/get/'.$file->get('file_id'))?>"><i class="float-right p-2 align-middle text-rigth fas fa-arrow-down"></i></a>
+						</div>
+					<?php endforeach;?>
+				</div>
+			<?php endif;?>
+		</div>
+		</div>
+		<div class="col-7 pr-0 previewer-container">
+		<?=$filePreviewer->display();?>
+		</div>
+		</div>
+		<script>
+			$(document).ready(function()
+			{
+				$(".file a").on("click", function(event){event.stopPropagation();});
+				$(".file").on("click", function(event)
+				{
+					$(".file").removeClass("active");
+					$(this).addClass("active");
+					$.get("/api/files/previewer/"+$(this).data('file-id'), {}, function(data)
+					{
+						$(".previewer-container").html(data);
+					});
+				});
+			});
+		</script>
+	<?
+	break;
+	case 'create':
+	?>
+	<form class="m-2" id="decreesForm" method="post" action="<?=$router->url('create')?>">
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label><?=_("Decree name")?>:</label></span></div>
+		<div class="col-8"><input class="form-control" type="text" name="name" /></div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label><?=_("Decree description")?>:</label></span></div>
+		<div class="col-8"><textarea class="form-control" name="desc" rows="4"></textarea></div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label><?=_("Choose main file")?>:</label></span></div>
+	    <div class="col-8 dropzone-form" id="mainFile">
+	    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label><?=_("Choose addition files(unnessecary)")?>:</label></span></div>
+	    <div class="col-8 dropzone-form" id="additionalFiles">
+	    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+	<input type="submit" class="btn btn-primary" name="Опублікувати">
+	</form>
+	<script>
+		$(document).ready(function()
+		{
+			Dropzone.autoDiscover = false;
+
+			var mainFileId = [];
+			var additionFilesId = [];
+			var isEditForm = <?=($router->getAction() == 'edit'?1:0)?>;
+			var mainFile =  new Dropzone("div#mainFile", {
+			    	url: "/api/files/upload",
+				    autoProcessQueue: false,
+				  	uploadMultiple: true,
+				  	parallelUploads: 10,
+				  	maxFiles: 1,
+				  	maxFilesize: 20,
+				  	createImageThumbnails: false,
+				  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+				  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+				  	init: function(){
+				  		this.on("success", function(file, respond){
+				  			onMainFileSuccess(file, respond);
+				  		});
+				  	}
+			    });
+			var additionFiles =  new Dropzone("div#additionalFiles", {
+			    	url: "/api/files/upload",
+				    autoProcessQueue: false,
+				  	uploadMultiple: true,
+				  	parallelUploads: 10,
+				  	maxFiles: 10,
+				  	maxFilesize: 20,
+				  	createImageThumbnails: false,
+				  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+				  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+				  	init: function(){
+				  		this.on("success", function(file, respond){
+				  			onAdditionFilesSuccess(file, respond);
+				  		});
+				  	}
+			    });
+
+				var onMainFileSuccess = function(file, respond)
+				{
+					mainFileId = '';
+					if(respond != null)mainFileId = jQuery.parseJSON(respond)[0];
+					if(additionFiles.getActiveFiles().length > 0)additionFiles.processQueue();
+					else onAdditionFilesSuccess(null, null);
+				};
+
+				var onAdditionFilesSuccess = function(file, respond = null)
+				{
+					additionFilesId = '';
+					if(respond != null)additionFilesId = jQuery.parseJSON(respond);
+					$("#decreesForm").append('<input type="text" name="mainFileId" value="'+mainFileId+'" hidden/>');
+					$("#decreesForm").append('<input type="text" name="additionFilesId" value="'+additionFilesId+'" hidden/>');
+					$("#decreesForm").submit();
+				};
+
+				$("form input[type='submit']").on("click", function(e)
+				{
+				      e.preventDefault();
+				      e.stopPropagation();
+				      if(!isEditForm || mainFile.getActiveFiles().length > 0)mainFile.processQueue();
+				      else onMainFileSuccess(null, null);	
+				});
+		});
+	</script>
+	<?php
+	break;
+	default:
+	?>
+	<?=($profile->hasPermission('handle_decrees')?
+		'<div class="toolbar"><a href="'.$router->url('create').'"class="btn btn-primary">'._("Add decree").'</a></div>':null)?>
+	<div class="list m-2">
+		<?php foreach($decrees as $decree): ?>
+			<div class="list-block mb-1 p-2">
+			<a href="<?=$router->url('view/'.$decree['decree_id'])?>" class="list-block-title"><?=$decree['name']?></a>
+			<div class="list-block-detail"><?=TextHelper::cut($decree['description'], 300, true)?></div>
+			<a href="<?=$router->url('view/'.$decree['decree_id'])?>"><?=_("More...")?></a>
+			</div>
+		<?php endforeach;?>
+	</div>
+
+	<?php
+	break;
+}
+?>

@@ -7,10 +7,10 @@ class SessionAlerts
 							'info' => array(),
 							'success' => array(),
 					);
-	public $alertsHtml = array('error' => '<div class="alert alert-danger">%s</div>',
-							'warning' => '<div class="alert alert-warning">%s</div>',
-							'info' => '<div class="alert alert-info">%s</div>', 
-							'success' => '<div class="alert alert-success">%s</div>', 
+	public $alertsHtml = array('error' => '<div class="m-2 alert alert-danger">%s</div>',
+							'warning' => '<div class="m-2 alert alert-warning">%s</div>',
+							'info' => '<div class="m-2 alert alert-info">%s</div>', 
+							'success' => '<div class="m-2 alert alert-success">%s</div>', 
 						);
 
 	public function __construct($config = null)

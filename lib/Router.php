@@ -7,6 +7,7 @@ class Router
 	private $page;
 	private $module;
 	private $params;
+	private $queries;
 	private $indexPage = 'index';
 	private $availableForGuests = false;
 
@@ -15,7 +16,6 @@ class Router
 		if($pRoute == null)
 		{
 			$this->currentRoute = $_SERVER['REQUEST_URI'];
-			if($this->currentRoute == '/')$this->currentRoute = $this->indexPage;
 		}
 		else
 		{
@@ -29,21 +29,40 @@ class Router
 	{
 		$routeToParse = trim($this->currentRoute, '/');
 		$routeArray = explode('/', $routeToParse);
+		if(count($routeArray) != 0 && strpos($routeArray[count($routeArray)-1], '?') !== false)
+			$this->parseQueries(array_pop($routeArray));
 
 		$moduleType = array_shift($routeArray);
-		$this->page = $moduleType;
-		if(!in_array($moduleType, Module::$types))$this->module = new Module($this->page);
-		else
+		if(in_array($moduleType, Module::$types))
 		{
 			$this->page = array_shift($routeArray);
 			if($this->page == null)$this->page = $this->indexPage;
 			$this->module = new Module($this->page, array_search($moduleType, Module::$types));
 		}
+		else
+		{
+			$this->page = $moduleType;
+			if($this->page == null)$this->page = $this->indexPage;
+			$this->module = new Module($this->page, Module::_PUBLIC);
+		}
 		$this->action = array_shift($routeArray);
 		$this->params = $routeArray;
+
 		if(in_array($this->module->getFullName(), explode(",", Config::get('guest_pages'))))
 		{
 			$this->availableForGuests = true;
+		}
+	}
+
+	private function parseQueries($queries){
+		$queries = trim($queries, '?');
+		$queriesArray = explode('&', $queries);
+		$this->queries = [];
+		foreach($queriesArray as $query)
+		{
+			$tempQuery = explode('=', $query);
+			if(!isset($tempQuery[1]))$tempQuery[1] = true;
+			$this->queries[$tempQuery[0]] = $tempQuery[1];
 		}
 	}
 
@@ -97,7 +116,7 @@ class Router
 	{
 		if(is_int($index))
 		{
-			if(empty($this->params) || empty($this->params[$index]))return null;
+			if(empty($this->params) || !isset($this->params[$index]))return null;
 			if($index > -1)return $this->params[$index];
 			return $this->params;			
 		}
@@ -110,6 +129,12 @@ class Router
 		}
 
 		return null;
+	}
+
+	public function getQuery($queryName)
+	{
+		if(empty($this->queries) || !isset($this->queries[$queryName]))return null;
+		return $this->queries[$queryName];
 	}
 
 	public function url($actionParams = null, $module = null)

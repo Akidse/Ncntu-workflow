@@ -42,14 +42,21 @@ switch($router->getAction())
 		echo json_encode($addedFilesIds);
 	break;
 	case 'get':
-	$file = Database::query("SELECT * FROM `files` WHERE `file_id` = ?", [(int)$router->getParams()[0]])[0];
+	$file = Database::query("SELECT * FROM `files` WHERE `file_id` = ?", [(int)$router->getParams(0)], Database::SINGLE);
 	file_force_download(PathManager::file($file['real_name']), $file['name']);
 	break;
 	case 'previewer':
 	if(empty($router->getParams(0)))exit;
 	$file = new File(intval($router->getParams(0)));
-	$filePreviewer = new FilePreviewer($file);
-	$filePreviewer->display();
+	if($file->isExists())
+	{
+		$filePreviewer = new FilePreviewer($file);
+		$filePreviewer->display();		
+	}
+	else
+	{
+		echo '<div class="alert alert-warning">'._("Such file does not exists").'</div>';
+	}
 	break;
 	default:
 	break;

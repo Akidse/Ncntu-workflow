@@ -1,0 +1,104 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction())
+{
+	case 'edit':
+	?>
+	<form class="m-2" method="post" action="<?=$router->getRoute()?>">
+	<div class="form-group">
+		<label><?=_("Groups")?>: <span id="noGroupsLabel"><?=_("this user do not have any groups")?></span></label>
+		<div id="groupsContainer"></div>
+		<input type="text" name="groups" hidden value="<?=$user->get('groups')?>">
+		<div class="row p-0 m-1">
+		<select class="form-control col-3" name="groups-select">
+			<?php foreach($groups as $group):?>
+				<option value="<?=$group['group_id']?>"><?=$group['name']?></option>
+			<?php endforeach;?>
+		</select>
+		<button id="addGroupButton" class="ml-2 col-1 btn btn-success"><?=_("Add group")?></button>
+		</div>
+	</div>
+	<div class="form-group col-4">
+		<label><?=_("Department")?>:</label>
+		<select id="department" class="form-control col-4" name="department_id" data-selected-option="<?=$user->get('department_id')?>"></select>
+	</div>
+	<div class="form-group">
+		<button class="m-1 btn btn-primary"><?=_("Save")?></button>
+	</div>
+	</form>
+	<script>
+		let groups = <?=$groupsJson?>;
+		let groupsArray = <?=$groupsArrayJson?>;
+		function addGroup(id){
+			if(groupsArray.indexOf(id) == -1)groupsArray.push(id);
+			$("input[name='groups']").attr('value', groupsArray.join(','));
+		}
+		function removeGroup(id, text){
+			let index = groupsArray.indexOf(""+id);
+			if(index != -1)groupsArray.splice(index, 1);
+			$("input[name='groups']").attr('value', groupsArray.join(','));
+			$("select[name='groups-select']").append("<option value='"+id+"'>"+text+"</option>");
+		}
+		function addGroupBadge(id, name){
+			$("#noGroupsLabel").hide();
+			addGroup(id);
+			$("#groupsContainer").append('<span class="m-1 btn btn-primary group-badge" data-group-id="'+id+'">'+name+' <i class="fas fa-minus-circle"></i></span>');
+		}
+		groups.forEach(function(group){
+			addGroupBadge(group[0], group[1]);
+		});
+
+		$("#addGroupButton").on("click", function(e){
+			e.preventDefault();
+			let selectedGroup = $("select[name='groups-select'] option:selected");
+			if(selectedGroup.attr('value') != null)
+			{
+				addGroupBadge(selectedGroup.attr('value'), selectedGroup.text());
+				selectedGroup.remove();
+			}
+		});
+
+		$("#groupsContainer").on("click", ".group-badge i", function(){
+			removeGroup($(this).parent().data('group-id'), $(this).parent().text());
+			$(this).parent().remove();
+		});
+
+		$("#department").departmentSelect();
+	</script>
+	<?php
+	break;
+	case 'remove':
+	?>
+		<div class="m-2 alert alert-warning">
+		<?=_("Are you sure you want to remove this user? All data will be removed too.")?> 
+		<a href="<?=$router->getRoute()?>/?confirm=1" class="btn btn-danger"><?=_("Remove")?></a>
+		</div>
+	<?php
+	break;
+	case 'list':
+	?>
+	<div class="m-2 list">
+	<?php foreach($users as $user):?>
+		<div class="list-block mb-2 p-2">
+			<a href="<?=$router->url('/'.$user['user_id'], 'panel/profile')?>" class="list-block-detail"><?=($user['last_name'].' '.$user['first_name'].' '.$user['middle_name'])?></a>
+			<div class="list-block-detail">
+				<?=($user['user_id'] != $profile->get('user_id')?'<a class="btn btn-sm btn-danger" href="'.$router->url('remove/'.$user['user_id']).'">'._("Remove").'</a>':null)?>
+				<a class="btn btn-sm btn-primary" href="<?=$router->url('edit/'.$user['user_id'])?>"><?=_("Edit")?></a>
+			</div>
+		</div>
+	<?php endforeach;?>
+	</div>
+	<?
+	echo $pagination;
+	break;
+	default:
+	?>
+	<ul class="m-2 list-group list-group-flush">
+		<li class="list-group-item"><a href="<?=$router->url('list', 'admin/users')?>"><?=_("List of users")?></a></li>
+		<li class="list-group-item"><a href="<?=$router->url('', 'admin/groups')?>"><?=_("Users groups management")?></a></li>
+		<li class="list-group-item"><a href="<?=$router->url('', 'admin/permissions')?>"><?=_("Groups permissions management")?></a></li>
+	</ul>
+	<?php
+	break;
+}
+?>

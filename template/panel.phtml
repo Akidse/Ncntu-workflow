@@ -1,17 +1,24 @@
 <div class='container-fluid p-0 m-0'>
 	<div class="row m-0 p-0" id="top_wrapper">
-		<div class="col-2 logo-wrapper"><span class="h2 align-middle system-naming-span">СЕД НКНТУ</span></div>
+		<div class="col-2 logo-wrapper"><span class="h2 align-middle system-naming-span"><?=_("NCNTU Workflow")?></span></div>
 		<div class="col-10 p-0">
+		<div class="row" style="height: 100%;">
+		<div class="col-10">
 		<?php if(Template::getBackButtonUrl()):?>
 			<a href="<?=Template::getBackButtonUrl()?>" class="top-back-button"><i class="fas fa-chevron-left"></i></a>
 		<?php endif;?>
+		<span class="text text-title pl-3"><?=Template::getTitle()?></span>
+		</div>
+		<span class="col-2"><a href="<?=$router->url('', 'exit')?>" class="top-back-button float-right"><i class="fas fa-sign-out-alt"></i></a></span>
+		</div>
 		</div>
 	</div>
+
 	<div id="content_wrapper" class="row">
 		<div class="col-2 p-0" id="left_side">
 			<div id="fixed-wrapper">
 			<div class="row m-0 p-0">
-			<div class="col-3 p-1 pr-0"><img class="img-fluid" src='/public/img/noavatar.png'></div>
+			<div class="col-3 p-1 pr-0 text-center"><a href="<?=$router->url('', 'panel/profile')?>"><img class="img-fluid img-avatar" src='<?=$profile->getAvatar()?>'></a></div>
 			<div class="col-8 p-1 pl-0">
 				<span class="align-middle">
 					<?= $profile->get('last_name').' '.$profile->get('first_name').' '.$profile->get('middle_name') ?>
@@ -28,49 +35,87 @@
 				</div>
 			</div>
 			</div>
-			<?if(!empty($profile->getDepartment())):?>
-				<ul>
+			<?if(!empty($profile->getDepartment())):
+				$newDecreesCount = Database::query("SELECT COUNT(*) FROM `decrees` WHERE `time_created` > ?", [$profile->get('decree_last_view')]);
+				$panelUnreadLetters = Database::query("SELECT COUNT(*) FROM `letters` WHERE `receiver_id` = ? AND `unread` = 1",
+							[$profile->get('user_id')]);
+				?>
+				<ul class="left-menu">
 					<li>
 						<a href="<?=$router->url('', 'panel/documents')?>">
-							Документи станції 
+							<i class="fas fa-file-alt"></i> <?=_("Department documents")?>
 							<span class="badge badge-info">
-								<?=Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ?", [intval($profile->get('department_id'))])?>
+								<?=Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = 0", 
+										[intval($profile->get('department_id'))])?>
 							</span>
 						</a>
-					</li>
-					<li>Вхідні
 						<ul>
-							<li>Накази</li>
-							<li>Розпорядження</li>
-							<li>Листи</li>
+							<li>
+								<a href="<?=$router->url('private', 'panel/documents')?>">
+									<i class="fas fa-file-alt"></i> <?=_("My documents")?>
+									<span class="badge badge-info">
+										<?=Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = 1", 
+											[intval($profile->get('department_id'))])?>
+									</span>
+								</a>
+							</li>
 						</ul>
 					</li>
-					<li>Вихідні
+					<li>
+						<a href="<?=$router->url('', 'panel/decrees')?>">
+						<i class="fas fa-file-alt"></i> <?=_("Decrees")?>
+						<?php if($newDecreesCount > 0):?>
+							<span class="badge badge-info"><?=$newDecreesCount?></span>
+						<?php endif;?>
+						</a>
+					</li>
+					<li><a href="<?=$router->url('', 'panel/prescriptions')?>"><i class="fas fa-file-alt"></i> <?=_("Prescriptions")?></a>
+					</li>
+					<?php $panelInboxRequests = Database::query("SELECT COUNT(*) FROM `documents_requests` WHERE `department_id` = ? AND `date_done` IS NULL",
+							[$profile->get('department_id')]);?>
+					<?php if($panelInboxRequests != 0):?>
+						<li><a href="<?=$router->url('inbox', 'panel/requests')?>"><i class="fas fa-file-alt"></i> <?=_("Incoming department requests")?>
+							<span class="badge badge-info"><?=$panelInboxRequests?></span></a>
+					<?php endif;?>
+					<?php $panelRequests = Database::query("SELECT COUNT(*) FROM `documents_requests` WHERE `user_id` = ? AND `date_done` IS NULL",
+							[$profile->get('user_id')]);?>
+					<?php if($panelRequests != 0):?>
+						<li><a href="<?=$router->url('', 'panel/requests')?>"><i class="fas fa-file-alt"></i> <?=_("Outcoming requests")?>
+							<span class="badge badge-info"><?=$panelRequests?></span></a>
+					<?php endif;?>
+					<li><a href="<?=$router->url('', 'panel/letters')?>"><i class="fas fa-envelope"></i> <?=_("Letters")?></a>
 						<ul>
-							<?if($profile->getDepartment()->getPermission('allow_decree')):?><li>Накази</li> <?endif;?>
-							<?if(!empty($profile->getDepartment()->getChildrens())):?><li>Розпорядження</li> <?endif;?>
-							<li>Листи</li>
+							<li><a href="<?=$router->url('inbox', 'panel/letters')?>">
+								<i class="fas fa-envelope"></i>  <?=_("Incoming")?><?=(empty($panelUnreadLetters)?null:' <span class="badge badge-danger">'.$panelUnreadLetters.'</span>')?>
+							</a></li>
+							<li><a href="<?=$router->url('outbox', 'panel/letters')?>"><i class="fas fa-envelope"></i>  <?=_("Outcoming")?></a></li>
 						</ul>
 					</li>
-				<?php if($profile->hasPermission('handle_archive')): ?>
-					<li><a href="<?=$router->url('', 'panel/archive')?>">Архів</a>
+				<?php if($profile->hasPermission('handle_archive')):
+				      $panelArchiveRequests = Database::query("SELECT COUNT(*) FROM `archive_requests`"); ?>
+					<li><a href="<?=$router->url('', 'panel/archive')?>"><i class="fas fa-archive"></i> <?=_("Archive")?></a>
 						<ul>
-							<li><a href="<?=$router->url('requests', 'panel/archive')?>">Вхідні заявки</a></li>
+							<li><a href="<?=$router->url('requests', 'panel/archive')?>">
+								<i class="fas fa-file-alt"></i> <?=_("Incoming requests")?>
+								<?=(empty($panelArchiveRequests)?null:' <span class="badge badge-info">'.$panelArchiveRequests.'</span>')?>
+							</a></li>
 						</ul>
 					</li>
 				<?php endif; ?>
 				</ul>
 				<?if($profile->getDepartment()->getPermission('allow_decree')):?>
-					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/">Створити наказ</a></div>
+					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/"><?=_("Create order")?></a></div>
 				<?endif;?>
 				<?if(!empty($profile->getDepartment()->getChildrens())):?>
-					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/">Створити розпорядження</a></div>
+					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/"><?=_("Create prescription")?></a></div>
 				<?endif;?>
-				<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/">Створити лист</a></div>
-				<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create/', 'panel/documents')?>">Завантажити документ</a></div>
-			<?endif;?>
+				<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create', 'panel/letters')?>"><?=_("Create letter")?></a></div>
+				<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create/private', 'panel/documents')?>"><?=_("Upload document")?></a></div>
+			<?else:?>
+			<div class="alert alert-null-result"><?=_("You are not in any department")?></div>
+			<? endif;?>
 			</div>
 		</div>
-		<div class="col-10 p-3" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
+		<div class="col-10 p-0" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
 	</div>
 </div>

@@ -14,8 +14,8 @@ function displayRecursiveDepartments($departments, $router)
 				<span class="badge badge-info">дозволів: <?=count($departmentObject->getPermissionsList())?></span>
 			<?endif;?>
 			<span class="float-right buttons">
-				<a href="<?=$router->url("add/".$department['department_id'])?>" class="btn btn-success btn-sm">Додати</a>
-				<a href="<?=$router->url("edit/".$department['department_id'])?>" class="btn btn-info btn-sm">Ред.</a>
+				<a href="<?=$router->url("add/".$department['department_id'])?>" class="btn btn-primary btn-sm">Додати</a>
+				<a href="<?=$router->url("edit/".$department['department_id'])?>" class="btn btn-primary btn-sm">Ред.</a>
 				<a href="<?=$router->url("remove/".$department['department_id'])?>" class="btn btn-danger btn-sm">Видалити</a>
 				</span>
 		</div>
@@ -31,8 +31,7 @@ switch($router->getAction())
 {
 	case 'add':
 	?>
-	<a href="<?=$router->url()?>" class="btn btn-link"><< Назад</a>
-	<form method="post" action="<?=$router->url("add/".$departmentId)?>">
+	<form class="m-2" method="post" action="<?=$router->url("add/".$departmentId)?>">
 	<div class="form-group row">
 		<label class="col-1 col-form-label">Назва: </label>
 		<div class="col-4"><input class="form-control" name="name" /></div>
@@ -60,8 +59,7 @@ switch($router->getAction())
 	break;
 	case 'edit':
 	?>
-	<a href="<?=$router->url()?>" class="btn btn-link"><< Назад</a>
-	<form method="post" action="<?=$router->url("edit/".$department->get('department_id'))?>">
+	<form class="m-2" method="post" action="<?=$router->url("edit/".$department->get('department_id'))?>">
 	<div class="form-group row">
 		<label class="col-1 col-form-label">Назва: </label>
 		<div class="col-4"><input class="form-control" name="name" value="<?=$department->get('name')?>"/></div>
@@ -99,7 +97,7 @@ switch($router->getAction())
 	<?
 	break;
 	default:
-	?><div><a href="<?=$router->url('add/0')?>" class="m-2 btn btn-success">Додати станцію</a></div><?
+	?><div class="toolbar"><a href="<?=$router->url('add/0')?>" class="btn btn-primary">Додати станцію</a></div><?
 	displayRecursiveDepartments($departments, $router);
 	break;
 }

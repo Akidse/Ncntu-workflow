@@ -1,0 +1,38 @@
+<div class="m-2 row">
+	<div class="col-4 p-1">
+		<div class="content-box">
+			<div class="content-box-header p-1"><?=_("Last documents")?></div>
+			<?php foreach($lastDocuments as $document):?>
+				<a href="<?=$router->url("view/".$document['document_id'], 'panel/documents')?>" class="content-box-a p-2">
+					<?=$document['name']?>
+				</a>
+			<?php endforeach;?>
+			<?php if(!count($lastDecrees)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
+			<a href="<?=$router->url("", "panel/documents")?>" class="content-box-seemore p-2"><?=_("Go to documents")?></a>
+		</div>
+	</div>
+	<div class="col-4 p-1">
+		<div class="content-box">
+			<div class="content-box-header p-1"><?=_("Last decrees")?></div>
+			<?php foreach($lastDecrees as $decree):?>
+				<a href="<?=$router->url("view/".$decree['decree_id'], 'panel/decrees')?>" class="content-box-a p-2">
+					<?=$decree['name']?>
+				</a>
+			<?php endforeach;?>
+			<?php if(!count($lastDecrees)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
+			<a href="<?=$router->url("", "panel/decrees")?>" class="content-box-seemore p-2"><?=_("Go to decrees")?></a>
+		</div>
+	</div>
+	<div class="col-4 p-1">
+		<div class="content-box">
+			<div class="content-box-header p-1"><?=_("Last prescriptions")?></div>
+			<?php foreach($lastPrescriptions as $prescription):?>
+				<a href="<?=$router->url("view/".$prescription['prescription_id'], 'panel/prescriptions')?>" class="content-box-a p-2">
+					<?=$prescription['name']?>
+				</a>
+			<?php endforeach;?>
+			<?php if(!count($lastDecrees)):?><div class="alert alert-null-result"><?=_("No documents")?></div><?php endif;?>
+			<a href="<?=$router->url("", "panel/prescriptions")?>" class="content-box-seemore p-2"><?=_("Go to prescriptions")?></a>
+		</div>
+	</div>
+</div>

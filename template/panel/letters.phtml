@@ -1,0 +1,136 @@
+<?php
+$sessionAlerts->display();
+switch($router->getAction())
+{
+	case 'view':
+	?>
+	<div class="letter-view p-2 m-2">
+	<div class="letter-subject p-1"><b>Тема: </b><?=$letter['subject']?> <span class="text-sm float"><?=$letter['time_created']?></span></div>
+	<div class="letter-author p-1"><b>Автор: </b><?=$author->getFullName()?></div>
+	<div class="letter-receiver p-1"><b>Отримувач: </b><?=$receiver->getFullName()?></div>
+	<div class="letter-message p-1"><?=$letter['message']?></div>
+	<div class="letter-attachments">
+		<?=$filesListTemplate->display(["files" => $files])?>
+	</div>
+	</div>
+	<?
+	break;
+	case 'create':
+	?>
+	<form class="m-2" method="post" action="<?=$router->url('create')?>" id="letterForm">
+	<div class="form-group row">
+		<div class="col-2">Отримувач</div>
+		<div class="col-6 p-0"><select class="receiver-select form-control" name="receiver"></select></div>
+	</div>
+	<div class="form-group row">
+		<div class="col-2">Тема:</div>
+		<div class="col-6 p-0"><input class="form-control" type="text" name="subject"/></div>
+	</div>
+	<div class="form-group row">
+		<div class="col-2">Повідомлення:</div>
+		<div class="col-6 p-0"><textarea class="form-control" name="message"></textarea></div>
+	</div>
+	<div class="row form-group">
+		<div class="col-2"><span class="align-middle"><label>Виберіть файли:</label></span></div>
+	    <div class="col-6 dropzone-form" id="files">
+	    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+	        <div class="dropzone-previews"></div>
+	    </div>
+	</div>
+	<input type="submit" class="btn btn-primary" value="Відправити">
+	</form>
+	<script>
+	$(document).ready(function()
+	{
+		function onFilesSuccess(file, respond)
+		{
+			var filesIds = '';
+			if(respond != null)filesIds = jQuery.parseJSON(respond);
+			$("#letterForm").append('<input type="text" name="filesid" value="'+filesIds+'" hidden/>');
+			$("#letterForm").submit();
+		}
+		var Files =  new Dropzone("div#files", {
+	    	url: "/api/files/upload",
+		    autoProcessQueue: false,
+		  	uploadMultiple: true,
+		  	parallelUploads: 10,
+		  	maxFiles: 10,
+		  	maxFilesize: 20,
+		  	createImageThumbnails: false,
+		  	acceptedFiles: "text/*,application/pdf, application/msword, image/*",
+		  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+		  	init: function(){
+		  		this.on("success", function(file, respond){
+		  			onFilesSuccess(file, respond);
+		  		});
+		  	}
+	    });
+	    $("form input[type='submit']").on("click", function(e)
+		{
+		      e.preventDefault();
+		      e.stopPropagation();
+		      if(Files.getActiveFiles().length > 0)Files.processQueue();
+		      else onFilesSuccess(null, null);
+		});
+
+		$('.receiver-select').select2({
+		  data: [<?=$jsonReceiver?>],
+		  ajax: {
+		    url: '<?=$router->url('search', 'api/users')?>',
+		    dataType: 'json',
+		    type: 'POST'
+		  }
+		});
+	});
+	</script>
+	<?php
+	break;
+	case 'inbox':
+	?>
+	<div class="toolbar">
+		<a class="btn btn-primary" href="<?=$router->url('create')?>">Створити лист</a>
+	</div>
+	<div class="letters-list">
+	<?php foreach($letters as $letter):
+		$author = new User($letter['user_id']);
+		$countFiles = count(explode(',', $letter['files']));
+	?>
+		<a class="letter-block <?=($letter['unread']?'letter-block-unread':null)?> row ml-1 mr-1 p-2" href="<?=$router->url('view/'.$letter['letter_id'])?>">
+			<div class="col col-2"><?=$author->getFullName()?></div>
+			<div class="col col-6"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
+			<span class="text-sm"><?=(empty($letter['message'])?_('(no message)'):TextHelper::cut($letter['message'], 64, true))?></span></div>
+			<div class="col col-2 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
+			<div class="col col-2 text-right"><b><?=$letter['time_created']?></b></div>
+		</a>
+	<?php endforeach; ?>
+	</div>
+	<?php
+	echo $paginator;
+	break;
+	case 'outbox':
+	?>
+		<div class="toolbar">
+			<a class="btn btn-primary" href="<?=$router->url('create')?>">Створити лист</a>
+		</div>
+		<div class="letters-list">
+		<?php foreach($letters as $letter):
+			$receiverUser = new User($letter['receiver_id']);
+			$countFiles = count(array_filter(explode('/', $letter['files'])));
+		?>
+		<a class="letter-block row ml-1 mr-1 p-2" href="<?=$router->url('view/'.$letter['letter_id'])?>">
+			<div class="col col-2"><?=$receiverUser->getFullName()?></div>
+			<div class="col col-6"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
+			<span class="text-sm"><?=(empty($letter['message'])?_('(no message)'):TextHelper::cut($letter['message'], 64, true))?></span></div>
+			<div class="col col-2 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
+			<div class="col col-2 text-right"><b><?=$letter['time_created']?></b></div>
+		</a>
+		<?php endforeach; ?>
+		<?php if(empty($letters))Template::displayAlert('Нема вихідних повідомлень', 'null-result')?>
+		</div>
+	<?php
+	echo $paginator;
+	break;
+	default:
+
+	break;
+}

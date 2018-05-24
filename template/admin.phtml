@@ -1,49 +1,51 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title><?= $title ?></title>
-		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="/public/css/common.css">
-		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-		<script src="/public/scripts/common.js"></script>
-		<script src='https://www.google.com/recaptcha/api.js'></script>
-		<?php foreach($scriptManager->getScripts() as $script): ?>
-			<script src='<?=PathManager::script($script)?>'></script>
-		<?php endforeach; ?>
-	</head>
-	<body>
-	<div class='container-fluid p-0 m-0'>
-		<div class="row m-0 p-0" id="top_wrapper">
-			<div class="col-10"><span class="align-middle system-naming-span">СЕД НКНТУ</span></div>
-			<div class="col-2 profile-info py-1 align-middle">
-				<?= $profile->get('email') ?>
-				<img src='/public/img/noavatar.png'>
-			</div>
+<div class='container-fluid p-0 m-0'>
+	<div class="row m-0 p-0" id="top_wrapper">
+		<div class="col-2 logo-wrapper"><span class="h2 align-middle system-naming-span"><?=_("NCNTU Workflow")?></span></div>
+		<div class="col-10 p-0">
+		<div class="row" style="height: 100%;">
+		<div class="col-10">
+		<?php if(Template::getBackButtonUrl()):?>
+			<a href="<?=Template::getBackButtonUrl()?>" class="top-back-button"><i class="fas fa-chevron-left"></i></a>
+		<?php endif;?>
+		<span class="text text-title pl-3"><?=Template::getTitle()?></span>
 		</div>
-		<div id="content_wrapper" class="row">
-			<div class="col-2 p-0" id="left_side">
-				<div id="fixed-wrapper">
-					<ul>
-					<li><a href="/document/new/">Створити документ</a></li>
-					<li>Вхідні
-						<ul>
-							<li>Накази</li>
-							<li>Розпорядження</li>
-							<li>Листи</li>
-						</ul>
-					</li>
-					<li>Вихідні
-						<ul>
-							<li>Накази</li>
-							<li>Розпорядження</li>
-							<li>Листи</li>
-						</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-10 p-3" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
+		<span class="col-2"><a href="<?=$router->url('', 'exit')?>" class="top-back-button float-right"><i class="fas fa-sign-out-alt"></i></a></span>
+		</div>
 		</div>
 	</div>
-	</body>
-</html>
+
+	<div id="content_wrapper" class="row">
+		<div class="col-2 p-0" id="left_side">
+			<div id="fixed-wrapper">
+			<div class="row m-0 p-0">
+			<div class="col-3 p-1 pr-0 text-center"><a href="<?=$router->url('', 'panel/profile')?>"><img class="img-fluid img-avatar" src='<?=$profile->getAvatar()?>'></a></div>
+			<div class="col-8 p-1 pl-0">
+				<span class="align-middle">
+					<?= $profile->get('last_name').' '.$profile->get('first_name').' '.$profile->get('middle_name') ?>
+				</span>
+				<div class="text-sm font-weight-bold">
+					<?if(!empty($profile->getDepartment())):?>
+						<?=$profile->getDepartment()->get('name')?>
+					<?endif;?>
+				</div>
+				<div class="text-sm" style="line-height: 1.2">
+					<?if(!empty($profile->getGroupsList())):?>
+						<?=$profile->getGroupsList()?>
+					<?endif;?>
+				</div>
+			</div>
+			</div>
+			<?if(!empty($profile->getDepartment())):?>
+				<ul class="left-menu">
+				<li><a href="<?=$router->url('', 'admin/users')?>"><?=_("Users management")?></a></li>
+				<li><a href="<?=$router->url('', 'admin/departments')?>"><?=_("Departments management")?></a></li>
+				<li><a href="<?=$router->url('', 'admin/documents')?>"><?=_("Documents management")?></a></li>
+				<li><a href="<?=$router->url('', 'admin/system')?>"><?=_("System settings")?></a></li>
+				<li><a href="<?=$router->url('', 'admin/logs')?>"><?=_("Logs and statistics")?></a></li>
+				</ul>
+			<?endif;?>
+			</div>
+		</div>
+		<div class="col-10 p-0" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
+	</div>
+</div>

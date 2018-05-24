@@ -1,0 +1,9 @@
+<div class="files-list">
+	<?php foreach($data["files"] as $file):?>
+		<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
+			<span class="format-icon format-<?=$file->getFormat()?>"></span>
+			<span class="align-middle"><?=$file->get('name')?></span>
+			<a href="<?=$router->url('', 'api/files/get/'.$file->get('file_id'))?>"><i class="float-right p-2 align-middle text-rigth fas fa-arrow-down"></i></a>
+		</div>
+	<?php endforeach;?>
+</div>

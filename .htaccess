@@ -3,5 +3,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . index.php
 
+ErrorDocument 404 /error/?type=404
+ErrorDocument 403 /error/?type=403
+
 <FilesMatch "\.(ini|conf)$">
+    Order allow,deny
+    Deny from all
 </FilesMatch>

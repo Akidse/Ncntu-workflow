@@ -2,6 +2,6 @@
 if($profile->isLogged())
 {
 	$authorizeSession->clear();
-	$router->redirect($router->url("auth"));
+	$router->redirect($router->url());
 }
 exit;

@@ -47,4 +47,9 @@ class Template
 	{
 		return self::$jsFiles;
 	}
+
+	public static function displayAlert($text, $class='success')
+	{
+		echo '<div class="alert alert-'.$class.'">'.$text.'</div>';
+	}
 }

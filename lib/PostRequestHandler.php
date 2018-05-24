@@ -8,6 +8,7 @@ class PostRequestHandler
 
 	public const STRLEN_VALID = 1;
 	public const EMAIL_VALID = 2;
+	public const NUMBER_VALID = 3;
 
 	private $fields = array();
 	private $validators = array();
@@ -35,7 +36,7 @@ class PostRequestHandler
 
 			if(isset($params['required']) && $params['required'] == true && !isset($_POST[$field]))$isValid = false;
 
-			if($this->validate($field) == false)$isValid = false;
+			if(isset($_POST[$field]) && $this->validate($field) == false)$isValid = false;
 
 			$this->fields[$field]['is_valid'] = $isValid;
 
@@ -59,6 +60,9 @@ class PostRequestHandler
 					if(isset($params['min']) && strlen($fieldValue) < $params['min'])$isValid = false;
 					if(isset($params['max']) && strlen($fieldValue) > $params['max'])$isValid = false;
 				break;
+				case self::NUMBER_VALID:
+				
+				break;
 				default:
 				$isValid = true;
 				break;
@@ -71,6 +75,7 @@ class PostRequestHandler
 	private function normalize(string $field)
 	{
 		if(!isset($this->fields[$field]['type']))return $_POST[$field];
+		if(empty($_POST[$field]))return $_POST[$field];
 
 		switch($this->fields[$field]['type'])
 		{

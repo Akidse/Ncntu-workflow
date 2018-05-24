@@ -1,12 +1,16 @@
-<div id="auth_block">
-<form method="post" action="/reg/">
-<p><label>Прізвище:</label><input class="form-control" type="text" name="last_name"></p>
-<p><label>Ім'я:</label><input class="form-control" type="text" name="first_name"></p>
-<p><label>По-батькові:</label><input class="form-control" type="text" name="middle_name"></p>
-<p><label>E-mail:</label><input class="form-control" type="text" name="email"></p>
-<p><label>Пароль:</label><input class="form-control" type="password" name="password"></p>
-<p><label>Підтвердження паролю: </label><input class="form-control" type="password" name="password_confirm"></p>
-<div class="g-recaptcha" data-sitekey="6Lel9jIUAAAAAPgHrekbBIhJpUMAwV5D5v77YAkL"></div>
-<p><input class="btn btn-block btn-primary" type="submit" value="Register" name="submit_form"></p>
+<div class="center-block p-3" id="auth_block">
+<form class="auth-form" method="post" action="<?=$router->url("", "reg")?>">
+<?=$sessionAlerts->display()?>
+<p><label><?=_("Last name")?>:</label><input class="form-control" type="text" name="last_name"></p>
+<p><label><?=_("First name")?>:</label><input class="form-control" type="text" name="first_name"></p>
+<p><label><?=_("Middle name")?>:</label><input class="form-control" type="text" name="middle_name"></p>
+<p><label><?=_("E-mail")?>:</label><input class="form-control" type="text" name="email"></p>
+<p><label><?=_("Password")?>:</label><input class="form-control" type="password" name="password"></p>
+<p><label><?=_("Password confirm")?>: </label><input class="form-control" type="password" name="password_confirm"></p>
+<div class="g-recaptcha" data-sitekey="<?=Config::get('recaptcha_public_key')?>"></div>
+<p class="text-center">
+	<input class="btn btn-block btn-primary" type="submit" value="Register" name="submit_form">
+	<a href="/"><?=_('Back to main page')?></a>
+</p>
 </form>
 </div>

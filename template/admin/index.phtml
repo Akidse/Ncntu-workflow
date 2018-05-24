@@ -1,7 +1,7 @@
-<ul class="list-group list-group-flush">
-<?php foreach($modules as $module): ?>
-	<?php if(!$module['disabled']):?>
-		<li class="list-group-item"><a href="<?=$router->url('', $module['url'])?>"><?=$module['name']?></a></li>
-	<?php endif;?>
-<?php endforeach; ?>
+<ul class="m-2 list-group list-group-flush">
+	<li class="list-group-item"><a href="<?=$router->url('', 'admin/users')?>"><?=_("Users management")?></a></li>
+	<li class="list-group-item"><a href="<?=$router->url('', 'admin/departments')?>"><?=_("Departments management")?></a></li>
+	<li class="list-group-item"><a href="<?=$router->url('', 'admin/documents')?>"><?=_("Documents management")?></a></li>
+	<li class="list-group-item"><a href="<?=$router->url('', 'admin/system')?>"><?=_("System settings")?></a></li>
+	<li class="list-group-item"><a href="<?=$router->url('', 'admin/logs')?>"><?=_("Logs and statistics")?></a></li>
 </ul>

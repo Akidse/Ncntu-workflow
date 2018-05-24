@@ -9,12 +9,19 @@ class AuthorizeSession
 		if(isset($_COOKIE['user_id']) && isset($_COOKIE['password_hash']))
 		{
 			$this->userId = $this->validateLoginData($_COOKIE['user_id'], $_COOKIE['password_hash']);
+			if(!empty($this->userId))$this->set($_COOKIE['user_id'], $_COOKIE['password_hash'], true);
 		}
 		else if(isset($_SESSION['user_id']) && isset($_SESSION['password_hash']))
 		{
 			$this->userId = $this->validateLoginData($_SESSION['user_id'], $_SESSION['password_hash']);
 		}
-
+		if(empty($this->userId))
+		{
+			setcookie("user_id", "", time() - 3600);
+			setcookie("password_hash", "", time() - 3600);
+			$_SESSION['user_id'] = null;
+			$_SESSION['password_hash'] = null;
+		}
 		return $this->userId;
 	}
 

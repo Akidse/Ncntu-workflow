@@ -59,11 +59,13 @@ $postHandler = new PostRequestHandler([
 					],
 				],
 		]);
+
+Template::setTitle(_("Departments").' - '._("Admin panel"));
 switch($router->getAction())
 {
 	case 'add':
-	if(!isset($router->getParams()[0]) || ($router->getParams()[0] != 0 && 
-		Database::query("SELECT COUNT(*) FROM `departments` WHERE `department_id` = ?", [intval($router->getParams()[0])]) == 0))
+	if($router->getParams(0) == null || ($router->getParams(0) != 0 && 
+		Database::query("SELECT COUNT(*) FROM `departments` WHERE `department_id` = ?", [intval($router->getParams(0))]) == 0))
 		$router->redirect($router->url());
 
 	$departmentId = intval($router->getParams(0));
@@ -91,10 +93,11 @@ switch($router->getAction())
 			$router->redirect($router->url());
 		}
 	}
+	Template::setBackButtonUrl($router->url('', 'admin/departments'));
 	break;
 	case 'edit':
-	if(!isset($router->getParams()[0]) || ($router->getParams()[0] != 0 && 
-		Database::query("SELECT COUNT(*) FROM `departments` WHERE `department_id` = ?", [intval($router->getParams()[0])]) == 0))
+	if(empty($router->getParams(0)) || ($router->getParams(0) != 0 && 
+		Database::query("SELECT COUNT(*) FROM `departments` WHERE `department_id` = ?", [intval($router->getParams(0))]) == 0))
 		$router->redirect($router->url());
 
 	$departmentId = intval($router->getParams(0));
@@ -121,6 +124,7 @@ switch($router->getAction())
 			$sessionAlerts->add("Підрозділ відредаговано успішно", 'success');
 		}
 	}
+	Template::setBackButtonUrl($router->url('', 'admin/departments'));
 	break;
 	case 'remove':
 	if(!isset($router->getParams()[0]))$router->redirect($router->url());
@@ -136,8 +140,10 @@ switch($router->getAction())
  		$router->redirect($router->url());
  	}
 	$departmentsToDelete = recursiveDepartmentArray($department['department_id']);
+	Template::setBackButtonUrl($router->url('', 'admin/departments'));
 	break;
 	default:
     $departments = recursiveDepartmentArray(0);
+    Template::setBackButtonUrl($router->url('', 'admin'));
 	break;
 }

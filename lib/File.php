@@ -8,8 +8,13 @@ class File
 	public function __construct($fileId)
 	{
 		$databaseFile = Database::query("SELECT * FROM `files` WHERE `file_id` = ?", [(int)$fileId], Database::SINGLE);
+		if(empty($databaseFile))return;
 		$this->data = $databaseFile;
 		$this->path = PathManager::file($this->data['real_name']);
+	}
+	public function isExists()
+	{
+		return (!empty($this->data) && file_exists($this->path));
 	}
 	public function get($key)
 	{

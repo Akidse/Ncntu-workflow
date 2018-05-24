@@ -1,0 +1,196 @@
+<div class="install-container">
+    <div class="install-container-helper">
+        <div class="install-content p-2">
+        <?=$sessionAlerts->display()?>
+        <?php switch($router->getQuery('step'))
+        {
+        	case 5: 
+        	?>
+			<nav class="pt-2">
+			<ol class="cd-multi-steps text-bottom count">
+			<li class="visited"><a href="#0"><?=_("Database")?></a></li>
+			<li class="visited"><a href="#0"><?=_("Configuration")?></a></li>
+			<li class="current"><em><?=_("User")?></em></li>
+			<li><em><?=_("Schema")?></em></li>
+			<li><em><?=_("Finish")?></em></li>
+			</ol>
+			</nav>
+			<?php  	
+        	break;
+        	case 4: 
+        	?>
+			<nav class="pt-2">
+			<ol class="cd-multi-steps text-bottom count">
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("Database")?></a></li>
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("Configuration")?></a></li>
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("User")?></a></li>
+			<li class="current"><em><?=_("Schema")?></em></li>
+			<li><em><?=_("Finish")?></em></li>
+			</ol>
+			</nav>
+			<h4 class="text-center pb-3"><?=_("You can add default system config(departments, roles, etc.)")?></h4>
+			<form class="col-8 m-auto" method="post" action="<?=$router->getRoute()?>">
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Schema")?>:</label></div>
+				<div class="col-8 text-left align-middle">
+					<select class="form-control" name="schema">
+						<option value='0' selected><?=_("no selection")?></option>
+						<option value='1'><?=_("NCNTU")?></option>
+					</select>
+				</div>
+			</div>
+			<button class="btn btn-primary btn-block"><?=_("Save")?></button>
+			</form>
+			<?php  	
+        	break;
+        	case 3: 
+        	?>
+			<nav class="pt-2">
+			<ol class="cd-multi-steps text-bottom count">
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("Database")?></a></li>
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("Configuration")?></a></li>
+			<li class="current"><em><?=_("User")?></em></li>
+			<li><em><?=_("Schema")?></em></li>
+			<li><em><?=_("Finish")?></em></li>
+			</ol>
+			</nav>
+			<h4 class="text-center pb-3"><?=_("Now you have to create an Administrator")?></h4>
+			<form class="col-8 m-auto" method="post" action="<?=$router->getRoute()?>">
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("E-mail:")?></label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="email"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Last name")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="last_name"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("First name")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="first_name"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Middle name")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="middle_name"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Password")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="password" class="form-control" name="password"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Repeat password")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="password" class="form-control" name="password_confirm"></div>
+			</div>
+			<button class="btn btn-primary btn-block"><?=_("Save")?></button>
+			</form>
+			<?php  	
+        	break;
+        	case 2: 
+        	?>
+			<nav class="pt-2">
+			<ol class="cd-multi-steps text-bottom count">
+			<li class="visited"><a href="<?=$router->url('?step=2')?>"><?=_("Database")?></a></li>
+			<li class="current"><em><?=_("Configuration")?></em></li>
+			<li><em><?=_("User")?></em></li>
+			<li><em><?=_("Schema")?></em></li>
+			<li><em><?=_("Finish")?></em></li>
+			</ol>
+			</nav>
+			<h4 class="text-center pb-3"><?=_("Next you need to config your system")?></h4>
+			<form class="col-8 m-auto" method="post" action="<?=$router->getRoute()?>">
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Default page title")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="default_page_title" value="<?=Config::get('default_page_title')?>"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Max files size")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="max_file_size" value="<?=Config::get('max_file_size')?>"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Default locale")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="default_locale" value="<?=Config::get('default_locale')?>"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Recaptcha private key (unnecessary)")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="recaptcha_private_key" value="<?=Config::get('recaptcha_private_key')?>"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Recaptcha public key (unnecessary)")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="recaptcha_public_key" value="<?=Config::get('recaptcha_public_key')?>"></div>
+			</div>
+			<button class="btn btn-primary btn-block"><?=_("Save")?></button>
+			</form>
+			<?php  	
+        	break;
+        	case 1: 
+        	?>
+			<nav class="pt-2">
+			<ol class="cd-multi-steps text-bottom count">
+			<li class="current"><em><?=_("Database")?></em></li>
+			<li><em><?=_("Configuration")?></em></li>
+			<li><em><?=_("User")?></em></li>
+			<li><em><?=_("Schema")?></em></li>
+			<li><em><?=_("Finish")?></em></li>
+			</ol>
+			</nav>
+			<?php if(!empty(Config::get('db_host')) && !empty(Config::get('db_user')) && !empty(Config::get('db_name'))):?>
+				<div class="alert alert-warning"><?=_("Database already connected!")?></div>
+			<?php else: ?>
+			<h4 class="text-center pb-3"><?=_("First of all we need connection to database:")?></h4>
+			<form class="col-8 m-auto" method="post" action="<?=$router->getRoute()?>">
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Host")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="host"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("User")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="user"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Password")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="password" class="form-control" name="password"></div>
+			</div>
+			<div class="form-group row">
+				<div class="col-4 align-middle"><label><?=_("Database name")?>:</label></div>
+				<div class="col-8 text-left align-middle"><input type="text" class="form-control" name="database_name"></div>
+			</div>
+			<button class="btn btn-primary btn-block"><?=_("Connect")?></button>
+			</form>
+			</div>
+			<?php
+			endif; 	
+        	break;
+        	default:
+        	?>
+        	<h1 class="text-center"><?=_("Welcome to installation")?></h1>
+        	<div class="text-center mb-2"><img src="/public/img/logo-big.png" style="max-width: 20%;"></div>
+        	<div class="row install-description ml-2 mr-2">
+        	<div class="col-6">
+        		This script will install <span class="text-special">"NCNTU Docflow"</span> system on your site.<br>
+        		Minimal system requirments:<br>
+        		<ul>
+        		<li>Php 7.0+</li>
+        		<li>Mysql 5.6+</li>
+        		</ul>
+        		During this installation you will install and configure your system.<br/>
+        		Before you start you have to create Database.
+        	</div>
+        	<div class="col-6">
+        	<p><span class="text-special">"NCNTU Docflow"</span> - docflow system developed for Nadvirna's College.</p>
+        	<p>This system is used to manage files and bussiness flows in college.</p>
+        	It solves next problems:
+        	<ul>
+        	<li>Managing documents</li>
+        	<li>Web-archive</li>
+        	<li>Managing documents flow</li>
+        	</ul>
+        	</div>
+        	</div>
+        	<a class="btn btn-primary btn-block mt-2 btn-lg" href="<?=$router->url('?step=1')?>"><?=_("Start installation")?></a>
+        	<?php
+        	break;
+        }
+        ?>
+
+        </div>
+    </div>
+</div

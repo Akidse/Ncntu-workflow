@@ -39,6 +39,24 @@ $postHandler = new PostRequestHandler([
 
 switch($router->getAction())
 {
+	case 'request':
+	if(empty($router->getParams(0)) || empty(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `document_id` = ?", 
+		[intval($router->getParams(0))])))$router->redirect($router->url());
+
+	$document = Database::query("SELECT * FROM `departments_documents` WHERE `document_id` = ?", [intval($router->getParams(0))], Database::SINGLE);
+	$isPrivate = $document['is_private'];
+	if($isPrivate && $document['user_id'] != $profile->get('user_id'))$router->redirect($router->url());
+	if(isset($_POST['department']) && Database::query("SELECT COUNT(*) FROM `departments` WHERE `department_id` = ?", [intval($_POST['department'])]) != 0)
+	{
+		Database::query("INSERT INTO `documents_requests` (`type`, `department_id`, `document_id`, `user_id`, `description`) VALUES(?, ?, ?, ?, ?)",
+			['sign', $_POST['department'], $document['document_id'], $profile->get('user_id'), $_POST['description']]);
+		$sessionAlerts->add(_("Signature request was sent, you will be notice"), 'success');
+		$router->redirect($router->url("view/".$document['document_id'], "panel/documents"));
+	}
+	$departments = Database::query("SELECT `department_id`, `name` FROM `departments`");
+	Template::setBackButtonUrl($router->url("view/".$document['document_id'], "panel/documents"));
+	Template::setTitle(_("Create a signature request"));
+	break;
 	case 'versions':
 	if(empty($router->getParams(0)) || empty(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `document_id` = ? AND `department_id` = ?", 
 		[intval($router->getParams(0)), $profile->get('department_id')])))$router->redirect($router->url());
@@ -46,7 +64,7 @@ switch($router->getAction())
 	$versions = Database::query("SELECT * FROM `departments_documents_versions` WHERE `document_id` = ? ORDER BY `version_id` DESC", [$document['document_id']]);
 
 	Template::setBackButtonUrl($router->url('/view/'.$document['document_id']));
-	Template::setTitle('Версії документу - '.$document['name']);	
+	Template::setTitle(_("Document's versions").' - '.$document['name']);	
 	break;
 
 	case 'delete':
@@ -72,25 +90,28 @@ switch($router->getAction())
 		Database::query("DELETE FROM `departments_documents` WHERE `document_id` = ?", [$document['document_id']]);
 		Database::query("DELETE FROM `departments_documents_versions` WHERE `document_id` = ?", [$document['document_id']]);
 		Database::query("DELETE FROM `archive_requests` WHERE `document_id` = ?", [$document['document_id']]);
-		$sessionAlerts->add("Документ видалений", 'success');
+		$sessionAlerts->add(_("Document was removed"), 'success');
 		$router->redirect($router->url());
 	}
+	Template::setBackButtonUrl($router->url('/view/'.$document['document_id']));
+	Template::setTitle(_("Remove a document").' - '.$document['name']);
 	break;
 	case 'create':
+	$isPrivate = ($router->getParams(0) == 'private');
 	if($postHandler->proceed())
 	{
-		if(!$postHandler->isValid('name'))$sessionAlerts->add('Занадто довга або занадто коротка назва', 'error');
-		if(!$postHandler->isValid('desc'))$sessionAlerts->add('Занадто довгий опис', 'error');
-		if(!$postHandler->isValid('mainFileId'))$sessionAlerts->add('Виникли проблеми з завантаженням головного файлу', 'error');
-		if(!$postHandler->isValid('additionFilesId'))$sessionAlerts->add('Виникли проблеми з завантаженням додаткових файлів', 'error');
+		if(!$postHandler->isValid('name'))$sessionAlerts->add(_('Too long or too small name'), 'error');
+		if(!$postHandler->isValid('desc'))$sessionAlerts->add(_('Too long description'), 'error');
+		if(!$postHandler->isValid('mainFileId'))$sessionAlerts->add(_('Problems with uploading main file'), 'error');
+		if(!$postHandler->isValid('additionFilesId'))$sessionAlerts->add(_('Problems with uploading addition files'), 'error');
 
 		if($postHandler->isValid())
 		{
-			Database::query("INSERT INTO `departments_documents` (`name`, `description`, `user_id`, `department_id`, `file_id`, `addition_id`)VALUES(?, ?, ?, ?, ?, ?)",
+			Database::query("INSERT INTO `departments_documents` (`name`, `description`, `user_id`, `department_id`, `file_id`, `addition_id`, `is_private`)VALUES(?, ?, ?, ?, ?, ?, ?)",
 				[$postHandler->get('name'), $postHandler->get('desc'), $profile->get('user_id'), $profile->get('department_id'), 
-					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId')]);
-			$sessionAlerts->add("Документ успішно створений", 'success');
-			$router->redirect($router->url());
+					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId'), $isPrivate]);
+			$sessionAlerts->add(_("Document was created successfully"), 'success');
+			$router->redirect($router->url(($isPrivate?'private':null)));
 		}
 		else
 		{
@@ -104,7 +125,11 @@ switch($router->getAction())
 
 	$scriptManager->add("module/dropzone");
 	Template::setBackButtonUrl($router->url('/'));
-	Template::setTitle('Завантаження нового документу');
+	Template::setTitle(_("New department document"));
+	if($isPrivate)
+	{
+		Template::setTitle(_("New private document"));
+	}
 	break;
 
 	case 'edit':
@@ -135,10 +160,10 @@ switch($router->getAction())
 
 	if($postHandler->proceed())
 	{
-		if(!$postHandler->isValid('name'))$sessionAlerts->add('Занадто довга або занадто коротка назва', 'error');
-		if(!$postHandler->isValid('desc'))$sessionAlerts->add('Занадто довгий опис', 'error');
-		if(!$postHandler->isValid('mainFileId'))$sessionAlerts->add('Виникли проблеми з завантаженням головного файлу', 'error');
-		if(!$postHandler->isValid('additionFilesId'))$sessionAlerts->add('Виникли проблеми з завантаженням додаткових файлів', 'error');
+		if(!$postHandler->isValid('name'))$sessionAlerts->add(_('Too long or too small name'), 'error');
+		if(!$postHandler->isValid('desc'))$sessionAlerts->add(_('Too long description'), 'error');
+		if(!$postHandler->isValid('mainFileId'))$sessionAlerts->add(_('Problems with uploading main file'), 'error');
+		if(!$postHandler->isValid('additionFilesId'))$sessionAlerts->add(_('Problems with uploading addition files'), 'error');
 
 		$isAnyChanges = (!empty($postHandler->get('additionFilesId')) || !empty($postHandler->get('mainFileId')) || !empty($postHandler->get('files_to_remove')) ||
 			$document['name'] != $postHandler->get('name') || $document['description'] != $postHandler->get('desc'));
@@ -164,7 +189,7 @@ switch($router->getAction())
 			Database::query("UPDATE `departments_documents` SET `name` = ?, `description` = ?, `file_id` = ?, `addition_id` = ?, `time_updated` = ? WHERE `document_id` = ?",
 				[$postHandler->get('name'), $postHandler->get('desc'), $mainFileId, $additionFiles, TimeHelper::getCurrentTimestamp(), $document['document_id']]);
 
-			$sessionAlerts->add("Документ успішно відредагований", 'success');
+			$sessionAlerts->add(_("Changes to document are saved"), 'success');
 			$router->redirect($router->url('view/'.$document['document_id']));
 		}
 		else
@@ -179,7 +204,7 @@ switch($router->getAction())
 
 	$scriptManager->add("module/dropzone");
 	Template::setBackButtonUrl($router->url('/view/'.$document['document_id']));
-	Template::setTitle('Редагування документу - '.$document['name']);
+	Template::setTitle(_("Edit the document").' - '.$document['name']);
 	break;
 
 	case 'send-to-archive':
@@ -193,11 +218,12 @@ switch($router->getAction())
 	{
 		Database::query("INSERT INTO `archive_requests` (`document_id`, `user_id`, `time`, `type`)VALUES(?, ?, ?, ?)",
 			[$document['document_id'], $profile->get('user_id'), TimeHelper::getCurrentTimestamp(), 0]);
-		$sessionAlerts->add('Заявка на додання в архів зроблена', 'success');
+		$sessionAlerts->add(_("Archive request was created"), 'success');
 		$router->redirect($router->url('/view/'.$document['document_id']));
 	}
 
 	Template::setBackButtonUrl($router->url('/view/'.$document['document_id']));
+	Template::setTitle(_("Create request to archive").' - '.$document['name']);
 	break;
 
 	case 'view':
@@ -205,7 +231,7 @@ switch($router->getAction())
 		[intval($router->getParams(0))])))$router->redirect($router->url());
 
 	$document = Database::query("SELECT * FROM `departments_documents` WHERE `document_id` = ?", [intval($router->getParams(0))], Database::SINGLE);
-
+	$isPrivate = $document['is_private'];
 	if(!$profile->hasPermission('handle_archive') && $document['department_id'] != $profile->get('department_id') && !$document['is_archived'])
 		$router->redirect($router->url());
 
@@ -229,25 +255,45 @@ switch($router->getAction())
 	{
 		$additionFiles[] = new File($additionFileId);
 	}
-	$filePreviewer = new FilePreviewer(new File($document['file_id']));
+	$filePreviewer = new FilePreviewer($mainFile);
 
 	$isSentToArchive = Database::query("SELECT COUNT(*) FROM `archive_requests` WHERE `document_id` = ? AND `type` = '0'", [$document['document_id']]);
 
-	Template::setTitle('Перегляд документу - '.$document['name']);
+	Template::setTitle(_("Document view").' - '.$document['name']);
 	Template::setBackButtonUrl($router->url('/')); 
 	if($versionMode)Template::setBackButtonUrl($router->url('/versions/'.$document['document_id'])); 
+
+	$toolbar = new Toolbar();
+	if(!$versionMode && !$document['is_archived'])
+	{
+		if(!$isSentToArchive)
+		{
+			if(!$isPrivate)$toolbar->addButton($router->url('send-to-archive/'.$document['document_id']), _("Send to archive"));
+			if($isPrivate)$toolbar->addButton($router->url('move/'.$document['document_id']), _("Move to department"));
+			$toolbar->addButton($router->url('edit/'.$document['document_id']), _("Edit"));
+			if(($isPrivate && $document['user_id'] == $profile->get('user_id')) || !$isPrivate)
+				$toolbar->addButton($router->url('request/'.$document['document_id'].'/sign'), _("Create signature request"));
+		}
+		$toolbar->addButton($router->url('delete/'.$document['document_id']), _('Remove'), 'btn-danger');
+	}
 	break;
 
 	default:
-	$resultsPerPages = 10;
+	$isPrivate = ($router->getAction() == 'private');
 
-	$paginator = new Paginator(Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0",[intval($profile->get('department_id'))]),
-		$resultsPerPages, (!empty($router->getParams(0))?$router->getParams(0):null), '/panel/documents/page/(:num)');
+	$paginator = new Paginator(
+		Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ?", 
+		[intval($profile->get('department_id')), $isPrivate]),
+		$profile->get('results_per_page'),
+		$router->getQuery("page"),
+		$router->url("/?page=(:num)"));
 
-	Database::setNextLimit($paginator->getDBLimit(), $resultsPerPages);
-	$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 ORDER BY `document_id` DESC", [intval($profile->get('department_id'))]);
+	Database::setNextLimit($paginator->getDBLimit(), $profile->get('results_per_page'));
+	$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ? ORDER BY `document_id` DESC",
+		[intval($profile->get('department_id')), $isPrivate]);
 
-	Template::setTitle('Документи станції');
+	Template::setTitle(_("Department documents"));
+	if($isPrivate)Template::setTitle(_("My documents"));
 	break;
 }
 

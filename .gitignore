@@ -1,2 +1,5 @@
 #Ігнорування файлів
 files/*
+data/logs/*
+data/config.ini
+data/config-work.ini

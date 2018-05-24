@@ -10,26 +10,43 @@ session_start();
 include_once ROOT."/lib/autoload.php";
 
 Config::load(ROOT."/data/config.ini");
+Config::save();
 
+if(!empty(Config::get('db_host')) && !empty(Config::get('db_user')) && !empty(Config::get('db_name')))
 Database::connect(Config::get("db_host"), Config::get("db_user"), Config::get("db_password"), Config::get("db_name"));
 
 $router = new Router();
 
-$profile = new Profile();
 $title = 'Title';
 $templateType = 'plain';
 
 $scriptManager = new ScriptManager();
 
 $authorizeSession = new AuthorizeSession();
+
+if(!Config::get('isInstalled'))
+{
+	if($router->getModule()->getName() != 'install')$router->redirect($router->url('', 'install'));
+	include_once PathManager::module(new Module('install'));
+	include_once PathManager::template("common");
+	die();
+}
+
 if($authorizeSession->try())
 {
-	$profile->setUser($authorizeSession->getUserId());
+	$profile = new UserProfile($authorizeSession->getUserId());
 }
-else if(!$router->isAvailableForGuests() && $profile->getProfileType() == Profile::TYPE_GUEST)
+else
+{
+	$profile = new GuestProfile();
+}
+
+if(!$router->isAvailableForGuests() && !$profile->isLogged())
 {
 	$router->redirect('');
 }
+
+include_once ROOT."/lib/locale.php";
 
 include_once PathManager::module(new Module("module.settings", $router->getModule()->getType()));
 
@@ -39,8 +56,8 @@ if(PathManager::module($router->getModule()))
 }
 else
 {
-	echo "Not Found".$router->getModule()->getTypeName();
-
+	$router->redirect($router->url('', '404'));
+	exit;
 }
 include_once PathManager::template("common");
 ?>

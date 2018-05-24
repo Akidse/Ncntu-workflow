@@ -4,45 +4,50 @@ switch($router->getAction())
 {
 	case 'requests':
 	?>
-	<h4>Перелік заявок, надісланих в архів:</h4>
-		<div class="documents-list">
+		<div class="list">
 		<?php foreach($requests as $request): 
 			$document = Database::query("SELECT * FROM `departments_documents` WHERE `document_id` = ?", [$request['document_id']], Database::SINGLE);
 			$department = new Department($document['department_id']);
 			$author = new User($request['user_id']);
 		?>
-			<div class="document m-1 p-2">
-				<div class="document-title"><b>Тип заявки:</b> передача в архів</div>
-				<div class="document-desc">Документ: <a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><?=$document['name']?></a>, <?=$department->get('name')?></div>
-				<div class="document-desc">Автор заявки: <?=$author->getFullName()?></div>
-				<div class="document-desc">Час створення: <?=$request['time']?></div>
-				<a class="btn btn-sm btn-primary" href="<?=$router->url('/requests/confirm/'.$request['request_id'])?>">Підтвердити</a>
-				<a class="btn btn-sm btn-danger" href="<?=$router->url('/requests/reject/'.$request['request_id'])?>">Відхилити</a>
+			<div class="list-block m-1 p-2">
+				<div class="list-block-title"><?=_("Request type")?>: <?=_("transfer to archive")?></div>
+				<div class="list-block-author"><?=_("Author")?>: <a href="<?=$router->url('/'.$author->get('user_id'), 'panel/profile')?>"><?=$author->getFullName()?></a></div>
+				<div class="list-block-detail"><?=_("Department")?>: <a href="<?=$router->url('/'.$department->get('department_id'), 'panel/department')?>"><?=$department->get('name')?></a></div>
+				<div class="list-block-detail"><?=_("Document")?>: <a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><?=$document['name']?></a></div>
+				<div class="list-block-detail"><?=_("Time created")?>: <?=$request['time']?></div>
+				<a class="btn btn-sm btn-primary" href="<?=$router->url('/requests/confirm/'.$request['request_id'])?>"><?=_("Confirm")?></a>
+				<a class="btn btn-sm btn-danger" href="<?=$router->url('/requests/reject/'.$request['request_id'])?>"><?=_("Reject")?></a>
 			</div>
 		<? endforeach;?>
 		</div>
+		<?php if(!count($requests)):?><div class="alert alert-null-result"><?=_("There aren't any requests")?></div><?php endif;?>
 	<?
 	break;
 	default:
 	?>
-	<h4>Перелік документів в архіві:</h4>
-		<div class="documents-list">
+		<div class="list m-2">
 			<?php foreach($documents as $document): 
 				$department = new Department($document['department_id']);
+				$author = new User($document['user_id']);
 			?>
-				<div class="document m-1 p-2">
-				<a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><div class="document-title"><?=$document['name']?></div></a>
-				<div class="document-author">Станція: <b><?=$department->get('name')?></b></div>
-				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
-				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
+				<div class="list-block mb-1 p-2">
+				<a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>" class="list-block-title"><?=$document['name']?></a>
+				<div class="list-block-author"><?=_("Author")?>: <a href="<?=$router->url('/'.$author->get('user_id'), 'panel/profile')?>"><?=$author->getFullName()?></a></div>
+				<div class="list-block-detail"><?=_("Department")?>: <a href="<?=$router->url('/'.$department->get('department_id'), 'panel/department')?>"><?=$department->get('name')?></a></div>
+				<div class="list-block-detail"><?=TextHelper::cut($document['description'], 300, true)?></div>
 				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
 				<?php if(!empty($document['addition_id'])):?>
-					<span class="badge badge-info"><?=count(explode(',', $document['addition_id']))?> додатків</span>
+					<span class="badge badge-info">
+						<?=count(explode(',', $document['addition_id']))?> 
+						<?=TextHelper::decline(count(explode(',', $document['addition_id'])), 'додаток', 'додатка', 'додатків')?></span>
 				<?php endif;?>
 				</div>
 			<?php endforeach;?>
 		</div>
+		<?php if(!count($documents)):?><div class="alert alert-null-result"><?=_("There aren't any archived documents")?></div><?php endif;?>
 	<?
+		echo $paginator;
 	break;
 }
 ?>

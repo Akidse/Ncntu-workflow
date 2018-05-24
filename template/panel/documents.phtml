@@ -2,15 +2,34 @@
 $sessionAlerts->display();
 switch($router->getAction())
 {
+	case 'request':
+	?>
+	<form class="m-2" method="post" action="<?=$router->getRoute()?>">
+	Надіслати документ <b>"<?=$document['name']?>"</b> на підпис в підрозділ:
+	<div class="form-group">
+	<select class="form-control" name="department">
+	<?php foreach($departments as $department):?>
+		<option value="<?=$department['department_id']?>"><?=$department['name']?></option>
+	<?php endforeach;?>
+	</select>
+	</div>
+	<div class="form-group">
+		<label><?=_("Note (unnecessary)")?>:</label>
+		<textarea name="description" class="form-control"></textarea>
+	</div>
+	<input type="submit" name="Надіслати" class="btn btn-primary">
+	</form>
+	<?
+	break;
 	case 'versions':
 	?>
 		<div class="documents-list">
 		<?php foreach($versions as $version): $versionAuthor = new User($version['editor_id']);?>
 		<div class="document m-1 p-2">
-			<div class="document-title">Версія від: <?=$version['time_created']?></div>
-			<div class="document-author">Автор змін: <?=$versionAuthor->getFullName()?></div>
-			<div class="document-desc">Змінено: <?=$version['time_deprecated']?></div>
-			<a class="btn btn-sm btn-primary" href="<?=$router->url('view/'.$document['document_id'].'/version/'.$version['version_id'])?>">Переглянути версію</a>
+			<div class="document-title"><?=_("Version time")?>: <?=$version['time_created']?></div>
+			<div class="document-author"><?=_("Author of changes")?>: <?=$versionAuthor->getFullName()?></div>
+			<div class="document-desc"><?=_("Changed time")?>: <?=$version['time_deprecated']?></div>
+			<a class="btn btn-sm btn-primary" href="<?=$router->url('view/'.$document['document_id'].'/version/'.$version['version_id'])?>"><?=_("View version")?></a>
 		</div>
 		<?php endforeach;?>
 		</div>
@@ -18,34 +37,34 @@ switch($router->getAction())
 	break;
 	case 'delete':
 	?>
-		<div class="alert alert-success">
-		Ви дійсно хочете видалити цей документ? Всі файли і версії будуть видалені незворотньо.
-		<a href="<?=$router->url('delete/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center">Видалити</a>
+		<div class="m-2 alert alert-warning">
+		<?=_("Are you sure to remove this document? All files and versions will be removed.")?>
+		<a href="<?=$router->url('delete/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center"><?=_("Remove")?></a>
 		</div>
 	<?
 	break;
 	case 'create':
 	?>
-		<form id="documentsForm" method="post" action="<?=$router->url('/create/')?>">
+		<form class="p-2" id="documentsForm" method="post" action="<?=$router->url('create/'.$router->getParams(0))?>">
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Назва документу:</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Document name")?>:</label></span></div>
 				<div class="col-8"><input class="form-control" type="text" name="name" /></div>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Опис документу:</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Document description")?>:</label></span></div>
 				<div class="col-8"><textarea class="form-control" name="desc" rows="4"></textarea></div>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Виберіть головний файл:</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Choose main file")?>:</label></span></div>
 			    <div class="col-8 dropzone-form" id="mainFile">
-			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
 			        <div class="dropzone-previews"></div>
 			    </div>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Виберіть додатки(за потреби):</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Choose addition files (unnecessary)")?>:</label></span></div>
 			    <div class="col-8 dropzone-form" id="additionalFiles">
-			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
 			        <div class="dropzone-previews"></div>
 			    </div>
 			</div>
@@ -55,18 +74,18 @@ switch($router->getAction())
 	break;
 	case 'edit':
 	?>
-		<form id="documentsForm" method="post" action="<?=$router->url('/edit/'.$document['document_id'])?>">
+		<form class="m-2" id="documentsForm" method="post" action="<?=$router->url('/edit/'.$document['document_id'])?>">
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Назва документу:</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Document name")?>:</label></span></div>
 				<div class="col-8"><input class="form-control" type="text" name="name" value="<?=$document['name']?>" /></div>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Опис документу:</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Document description")?>:</label></span></div>
 				<div class="col-8"><textarea class="form-control" name="desc" rows="4"><?=$document['description']?></textarea></div>
 			</div>
 			<div class="files-list">
 				<div class="main-file row form-group">
-					<div class="col-2"><h5>Файл:</h5></div>
+					<div class="col-2"><h5><?=_("File")?>:</h5></div>
 					<div class="col-8">
 						<div class="file p-1 pt-2 pb-2 m-1"  data-file-id="<?=$mainFile->get('file_id')?>">
 							<span class="format-icon format-<?=$mainFile->getFormat()?>"></span><span class="align-middle"><?=$mainFile->get('name')?></span>
@@ -75,7 +94,7 @@ switch($router->getAction())
 				</div>
 				<?php if(!empty($document['addition_id'])):?>
 					<div class="addition-files row form-group">
-						<div class="col-2"><h5>Додатки:</h5></div>
+						<div class="col-2"><h5><?=_("Addition files")?>:</h5></div>
 						<div class="col-8">
 							<?php foreach($additionFiles as $file): ?>
 								<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
@@ -90,16 +109,16 @@ switch($router->getAction())
 				<input type="text" hidden="true" name="files_to_remove"/>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Виберіть головний файл(поточний буде замінений):</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Choose main file(current file will be removed)")?>:</label></span></div>
 			    <div class="col-8 dropzone-form" id="mainFile">
-			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
 			        <div class="dropzone-previews"></div>
 			    </div>
 			</div>
 			<div class="row form-group">
-				<div class="col-2"><span class="align-middle"><label>Виберіть додатки(за потреби):</label></span></div>
+				<div class="col-2"><span class="align-middle"><label><?=_("Choose addition files (unnecessary)")?>:</label></span></div>
 			    <div class="col-8 dropzone-form" id="additionalFiles">
-			    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+			    	<div class="dz-message"><?=_("Move files or click to upload")?></div>
 			        <div class="dropzone-previews"></div>
 			    </div>
 			</div>
@@ -109,40 +128,45 @@ switch($router->getAction())
 	break;
 	case 'send-to-archive':
 	?>
-	<div class="alert alert-success">
-	Ви дійсно хочете направити цей документ в архів?
-	<a href="<?=$router->url('send-to-archive/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center">Направити</a>
+	<div class="m-2 alert alert-warning">
+	<?=_("Are you sure to move this document to archive?")?>
+	<a href="<?=$router->url('send-to-archive/'.$document['document_id'].'/confirm')?>" class="btn btn-primary center"><?=_("Move")?></a>
 	</div>
 	<?php
 	break;
 	case 'view':
+	$toolbar->display();
 	?>
 		<?php if($versionMode):?>
 			<div class="alert alert-info">
-				Це застаріла версія документу. 
+				<?=_("It is old version of document")?>
 				Перейдіть до <a href="<?=$router->url('/view/'.$document['document_id'])?>">останньої версії</a>, щоб переглянути актуальний документ
 			</div>
 		<?php endif;?>
-		<div class="row" style="min-height: 100%">
+		<div class="row p-2" style="min-height: 90%">
 		<div class="col-5">
 		<h4><?=$document['name']?></h4>
 		<?=$document['description']?>
 		<?php if($versionMode): ?>
 			<div class="alert alert-warning mb-0">
-			<div><b>Змінено:</b> <?=$document['time_deprecated']?></div>
-			<div><b>Автор змін:</b> <?=$editor->getFullName()?></div>
+			<div><b><?=_("Changed time")?>:</b> <?=$document['time_deprecated']?></div>
+			<div><b><?=_("Author of changes")?>:</b> <?=$editor->getFullName()?></div>
 			</div>
-		<?php elseif($document['time_created'] != $document['time_updated']): ?>
+		<?php elseif($document['time_created'] != $document['time_updated'] && $versionsCount > 0): ?>
 			<div>
-				<b>Оновлено:</b> <?=$document['time_updated']?>
+				<b><?=_("Renewed")?>:</b> <?=$document['time_updated']?>
 				<?php if($versionsCount > 0):?>
 					<a href="<?=$router->url('versions/'.$document['document_id'])?>">(змінено <?=$versionsCount?> разів)</a>
 				<?php endif;?>
 			</div>
+		<?php else: ?>
+		<div>
+			<b><?=_("Created")?>:</b> <?=$document['time_created']?>
+		</div>
 		<?php endif;?>
-		<div><b>Автор:</b> <?=$author->getFullName()?></div>
+		<div><b><?=_("Author")?>:</b> <?=$author->getFullName()?></div>
 		<div class="files-list">
-			<h5>Файл:</h5>
+			<h5><?=_("File")?>:</h5>
 			<div class="file active p-1 pt-2 pb-2 m-1"  data-file-id="<?=$mainFile->get('file_id')?>">
 				<span class="format-icon format-<?=$mainFile->getFormat()?>"></span>
 				<span class="align-middle"><?=$mainFile->get('name')?></span>
@@ -150,7 +174,7 @@ switch($router->getAction())
 			</div>
 			<?php if(!empty($document['addition_id'])):?>
 				<div class="addition-files">
-					<h5>Додатки:</h5>
+					<h5><?=_("Addition files")?>:</h5>
 					<?php foreach($additionFiles as $file): ?>
 						<div class="file p-1 pt-2 pb-2 m-1" data-file-id="<?=$file->get('file_id')?>">
 						<span class="format-icon format-<?=$file->getFormat()?>"></span>
@@ -161,36 +185,33 @@ switch($router->getAction())
 				</div>
 			<?php endif;?>
 		</div>
-		<?php if(!$versionMode && !$document['is_archived']):?>
-			<?php if($isSentToArchive):?>
-				<button class="alert alert-light btn-block">Документ переданий в архів і очікує підтвердження</button>
-			<?php else: ?>
-				<div class="row pb-1">
-				<div class="col-6"><a class="btn btn-primary btn-block" href="<?=$router->url('send-to-archive/'.$document['document_id'])?>">Надіслати в архів</a></div>
-				<div class="col-6"><a class="btn btn-primary btn-block" href="<?=$router->url('edit/'.$document['document_id'])?>">Редагувати</a></div>
-				</div>
-			<?php endif; ?>
-			<a class="btn btn-danger btn-block" href="<?=$router->url('delete/'.$document['document_id'])?>">Видалити</a>
+		<?php if($isSentToArchive):?>
+				<button class="alert alert-light btn-block"><?=_("Archive request was created and document waits for response")?></button>
 		<? endif; ?>
 		</div>
 		<div class="col-7 previewer-container">
-		<?=$filePreviewer->display();?>
+		<?=($mainFile->isExists()?$filePreviewer->display():'<div class="alert alert-warning">'._("Such file does not exists").'</div>')?>
 		</div>
 		</div>
 	<?
 	break;
 	default:
 ?>
-		<a class="btn btn-primary" href="<?=$router->url('create')?>">Завантажити документ</a>
-		<div class="documents-list">
+		<div class="toolbar">
+			<a class="btn btn-primary" href="<?=$router->url('create')?>"><?=_("Upload document")?></a>
+		</div>
+		<div class="m-2 documents-list">
 			<?php foreach($documents as $document): ?>
-				<div class="document m-1 p-2">
+				<div class="document mb-1 p-2">
 				<a href="<?=$router->url('view/'.$document['document_id'])?>"><div class="document-title"><?=$document['name']?></div></a>
 				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
 				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
 				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
 				<?php if(!empty($document['addition_id'])):?>
-					<span class="badge badge-info"><?=count(explode(',', $document['addition_id']))?> додатків</span>
+					<span class="badge badge-info">
+					<?=count(explode(',', $document['addition_id']))?>
+					<?=TextHelper::decline(count(explode(',', $document['addition_id'])), 'додаток', 'додатка', 'додатків')?>
+						</span>
 				<?php endif;?>
 				</div>
 			<?php endforeach;?>

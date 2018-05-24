@@ -13,7 +13,7 @@
   	var constructSelect = function(select)
   	{
   		$(select).attr("hidden", true);
-  		$(select).parent().append("<select name='"+$(select).attr('name')+"' hidden='true'><option value='0' selected></option></select>");
+  		$(select).parent().append("<select name='"+$(select).attr('name')+"' hidden='true'><option value='"+($(select).data("selected-option") || 0)+"' selected></option></select>");
   		var trueSelect = $(select).parent().children('select').children('option');
 
   		$(select).attr('name', $(select).attr('name')+"_fake");

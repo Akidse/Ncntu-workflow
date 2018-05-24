@@ -35,7 +35,6 @@ $postHandler = new PostRequestHandler([
 		],
 	]);
 $sessionAlerts = new SessionAlerts();
-
 if($postHandler->proceed())
 {
 	if(!$postHandler->isValid('login'))$sessionAlerts->add("E-mail can't be less then 1 and more then 64", "error");

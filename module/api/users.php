@@ -1,5 +1,26 @@
 <?php
-
+function imageResize($target, $newcopy, $w, $h, $ext)
+{
+    list($w_orig, $h_orig) = getimagesize($target);
+    $scale_ratio = $w_orig / $h_orig;
+    if (($w / $h) > $scale_ratio) {
+           $w = $h * $scale_ratio;
+    } else {
+           $h = $w / $scale_ratio;
+    }
+    $img = "";
+    $ext = strtolower($ext);
+    if ($ext == "gif"){ 
+      $img = imagecreatefromgif($target);
+    } else if($ext =="png"){ 
+      $img = imagecreatefrompng($target);
+    } else { 
+      $img = imagecreatefromjpeg($target);
+    }
+    $tci = imagecreatetruecolor($w, $h);
+    imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
+    imagejpeg($tci, $newcopy, 80);
+}
 switch($router->getAction())
 {
 	case 'getbydepartment':
@@ -27,6 +48,16 @@ switch($router->getAction())
 			echo json_encode($jsonResult);
 		}
 	}
+	break;
+	case 'upload_avatar':
+		$filesArray = FileHelper::diverseFileArray($_FILES['file']);
+		$file = $filesArray[0];
+		$tempFile = $file['tmp_name'];
+		$targetFileName = FileHelper::generateRandomName(pathinfo($file['name'], PATHINFO_EXTENSION));
+		$targetFile = PathManager::avatar($targetFileName);
+		imageResize($tempFile, $tempFile, 300, 300, pathinfo($file['name'], PATHINFO_EXTENSION));
+		move_uploaded_file($tempFile, $targetFile);
+		echo json_encode($targetFileName);
 	break;
 	default:
 	echo false;

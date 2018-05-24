@@ -1,0 +1,136 @@
+<?php if(!empty($router->getAction()) && $router->getAction() == 'edit'): ?>
+<?php $sessionAlerts->display(); ?>
+<form class="profile-block m-2" method="post" action="<?=$router->url('edit/general')?>">
+<h4 class="p-2">General data</h4>
+<div class="row p-2">
+<div class="col-6">
+	<div class="form-group">
+		<label>First Name:</label>
+		<input type="text" class="form-control" name="first_name" value="<?=$userProfile->get('first_name')?>">
+	</div>
+	<div class="form-group">
+		<label>Second Name:</label>
+		<input type="text" class="form-control" name="middle_name" value="<?=$userProfile->get('middle_name')?>">
+	</div>
+	<div class="form-group">
+		<label>Last Name:</label>
+		<input type="text" class="form-control" name="last_name" value="<?=$userProfile->get('last_name')?>">
+	</div>
+</div>
+<div class="col-6">
+	<div class="form-group">
+		<label>Phone Number:</label>
+		<input type="text" class="form-control" name="phone_number" value="<?=$userResume['phone_number']?>">
+	</div>
+	<div class="form-group">
+		<label>Address:</label>
+		<input type="text" class="form-control" name="address" value="<?=$userResume['address']?>">
+	</div>
+	<div class="form-group">
+		<label>City:</label>
+		<input type="text" class="form-control" name="city" value="<?=$userResume['city']?>">
+	</div>
+</div>
+<div class="col-12">
+	<input class="btn btn-block btn-primary" type="submit" value="Зберегти">
+</div>
+</div>
+</form>
+<div class="row m-1">
+<form id="avatarForm" class="col-6 p-0" method="post" action="<?=$router->url('edit/avatar')?>">
+	<div class="profile-block m-1">
+		<h4 class="p-2">Change avatar</h4>
+		<div class="dropzone-form m-2" id="avatar">
+			<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
+		    <div class="dropzone-previews"></div>
+		</div>
+		<div class="m-2"><input class="btn btn-block btn-primary" type="submit" value="Замінити"></div>
+	</div>
+</form>
+<form class="col-6 p-0" method="post" action="<?=$router->url('edit/password')?>">
+	<div class="profile-block m-1">
+	<h4 class="p-2">Change password</h4>
+		<div class="form-group p-2">
+			<label>Old password:</label>
+			<input type="password" class="form-control" name="old_password">
+		</div>
+		<div class="form-group p-2">
+			<label>New password:</label>
+			<input type="password" class="form-control" name="password">
+		</div>
+		<div class="form-group p-2">
+			<label>Repeat password:</label>
+			<input type="password" class="form-control" name="password_confirm">
+		</div>
+		<div class="m-2"><input class="btn btn-block btn-primary" type="submit" value="Зберегти"></div>
+	</div>
+</form>
+</div>
+<script>
+$(document).ready(function()
+{
+	var avatarFileName = [];
+	var avatarDropzone = new Dropzone("div#avatar", {
+    	url: "/api/users/upload_avatar",
+	    autoProcessQueue: false,
+	  	uploadMultiple: true,
+	  	parallelUploads: 10,
+	  	maxFiles: 1,
+	  	maxFilesize: 10,
+	  	createImageThumbnails: false,
+	  	acceptedFiles: "image/*",
+	  	previewTemplate: '<div class="dz-preview dz-file-preview row p-1"> <div class="dz-image col-1"><img data-dz-thumbnail /></div> <div class="dz-details col-5 row"> <div class="dz-filename col-8"><span class="align-middle" data-dz-name></span></div><div class="dz-size col-4"><span class="align-middle" data-dz-size></span></div>  </div><div class="message-progress-container col-6"><div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div> <div class="dz-error-message"><span data-dz-errormessage></span></div> <div class="dz-success-mark">Завантажено</div> <div class="dz-error-mark">Помилка</div></div><a href="#" data-dz-remove class="col-1 text-center p-0">Забрати</a></div>',
+	  	init: function(){
+	  		this.on("success", function(file, respond){
+	  			onAvatarSuccess(file, respond);
+	  		});
+	  	}
+    });
+	var onAvatarSuccess = function(file, respond = null)
+	{
+		avatarFileName = '';
+		if(respond != null)avatarFileName = jQuery.parseJSON(respond);
+		$("#avatarForm").append('<input type="text" name="avatar_file" value="'+avatarFileName+'" hidden/>');
+		$("#avatarForm").submit();
+	};
+
+	$("#avatarForm input[type='submit']").on("click", function(e)
+	{
+		e.preventDefault();
+		e.stopPropagation();
+		if(avatarDropzone.getActiveFiles().length > 0)avatarDropzone.processQueue();
+	});
+});
+</script>
+<?php else: ?>
+<div class="toolbar">
+	<?php if($userProfile->get('user_id') == $profile->get('user_id')):?>
+		<a class="btn btn-primary" href="<?=$router->url('edit')?>">Редагувати профіль</a>
+	<?php endif;?>
+	<?php if($userProfile->get('user_id') != $profile->get('user_id')):?>
+		<a class="btn btn-primary" href="<?=$router->url('create/'.$userProfile->get('user_id'), 'panel/letters')?>">Надіслати листа</a>
+	<?php endif;?>
+</div>
+<div class="row row-content p-2 profile">
+<div class="col-2"><img class="profile__avatar" src="<?=$userProfile->getAvatar()?>"></div>
+<div class="col-10">
+	<h4><?=$userProfile->getFullName()?></h4>
+	<?php if(!empty($userProfile->getDepartment())):?>
+	<p><b>Станція:</b> <?=$userProfile->getDepartment()->get('name')?></p>
+	<?php endif;?>
+	<?php if(!empty($userProfile->getGroupsList())):?>
+	<p><b>Обов'язки:</b> <?=$userProfile->getGroupsList()?></p>
+	<?php endif;?>
+	<?php if(!empty($userResume['phone_number'])):?>
+	<p><b>Телефон:</b> <?=$userResume['phone_number']?></p>
+	<?php endif;?>
+	<?php if(!empty($userResume['city'])):?>
+	<p><b>Місто:</b> <?=$userResume['city']?></p>
+	<?php endif;?>
+	<?php if(!empty($userResume['address'])):?>
+	<p><b>Адреса:</b> <?=$userResume['address']?></p>
+	<?php endif;?>
+</div>
+</div>
+
+<?php endif; ?>

@@ -1,0 +1,20 @@
+<?php $sessionAlerts->display(); ?>
+<div class="documents-list p-2">
+<?php foreach($requests as $request): 
+	if($request['type'] == 'sign')$type='Запит на підпис';
+	$document = Database::query("SELECT `document_id`, `name` FROM `departments_documents` WHERE `document_id` = ?", [$request['document_id']], Database::SINGLE);
+	$author = new User($request['user_id']);
+?>
+<div class="document mb-1 p-2">
+<div class="document-title"><?=$type?></div>
+<div class="document-author"><a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><?=$document['name']?></a></div>
+<?php if($isInbox):?>
+	<div class="document-author"><a href="<?=$router->url($author->get('user_id'), 'panel/profile')?>"><?=$author->getFullName()?></a></div>
+<?php endif;?>
+<div class="document-desc"><?=$request['description']?></div>
+<div class="document-desc">Час створення: <?=$request['date_created']?></div>
+<?php if($isInbox):?><a class="btn btn-primary" href="<?=$router->url('done/'.$request['request_id'])?>">Виконати запит</a><?php endif;?>
+</div>
+<?php endforeach;?>
+</div>
+<?php if(count($requests) == 0):?><div class="alert alert-null-result">Немає запитів</div><?php endif;?>

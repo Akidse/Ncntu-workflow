@@ -1,6 +1,8 @@
 <?php
 $scriptManager->add("module/departmentSelect");
 
+Template::setTitle(_("Users departments")." - "._("Admin panel"));
+Template::setBackButtonUrl($router->url("", "admin/users"));
 if(isset($_POST) && $_POST != null)
 {
 	foreach($_POST as $key => $value)

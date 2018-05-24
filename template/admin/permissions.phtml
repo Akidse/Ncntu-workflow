@@ -35,8 +35,8 @@ switch($router->getAction()):
 	break;
 	default:
 	?>
-	<a class="btn btn-primary" href="<?=$router->url("add")?>">Додати привілегію</a>
-	<div class="groups-list">
+	<div class="toolbar"><a class="btn btn-primary" href="<?=$router->url("add")?>">Додати привілегію</a></div>
+	<div class="m-2 groups-list">
 	<?php foreach($permissions as $permission): ?>
 		<div class="group p-2 m-1">
 		<?=$permission['name']?>

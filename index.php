@@ -13,7 +13,6 @@ if(!file_exists(PathManager::data('config.ini')))
 	copy(PathManager::data('config_default.ini'), PathManager::data('config.ini'));
 
 Config::load(ROOT."/data/config.ini");
-Config::save();
 
 $profile = new GuestProfile();
 include_once ROOT."/lib/locale.php";

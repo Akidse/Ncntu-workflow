@@ -195,11 +195,20 @@ switch($router->getAction())
 		</div>
 	<?
 	break;
-	default:
-?>
-		<div class="toolbar">
-			<a class="btn btn-primary" href="<?=$router->url('create')?>"><?=_("Upload document")?></a>
+	case 'search':
+	?>
+	<div class="toolbar">
+		<div class="row m-0">
+		<form class="col-10 row p-0 m-0 pr-1 search-form" method="post" action="<?=$router->url('search'.($isPrivate?'?private=1':null))?>">
+			<input class="form-control col-10" type="search" name="search" placeholder="<?=_("Enter keywords in name or description of document")?>">
+			<input type="submit" class="btn btn-primary col-2" value="<?=_('Search')?>"></form>
+		</form>
+		<a class="btn btn-primary col-2" href="<?=$router->url('create')?>"><?=_("Upload document")?></a>
 		</div>
+	</div>
+	<?php if(empty($documents)): ?>
+		<div class="alert alert-null-result"><?=_("No documents found")?></div>
+	<?php else:?>
 		<div class="m-2 documents-list">
 			<?php foreach($documents as $document): ?>
 				<div class="document mb-1 p-2">
@@ -215,6 +224,45 @@ switch($router->getAction())
 				<?php endif;?>
 				</div>
 			<?php endforeach;?>
+		</div>
+	<?php endif;?>
+	<?php
+	break;
+	default:
+	?>
+	<div class="toolbar">
+		<div class="row m-0">
+		<form class="col-10 row p-0 m-0 pr-1 search-form" method="get" action="<?=$router->url()?>">
+			<input type="text" hidden name="private" value="<?=intval($isPrivate)?>">
+			<input class="form-control col-10" type="search" name="search" placeholder="<?=_("Enter keywords in name or description of document")?>">
+			<input type="submit" class="btn btn-primary col-2" value="<?=_('Search')?>"></form>
+		</form>
+		<a class="btn btn-primary col-2" href="<?=$router->url('create')?>"><?=_("Upload document")?></a>
+		</div>
+	</div>
+		<div class="m-2 documents-list">
+		<?php if($isSearch && !empty($documents)):?>
+			<div class="text-sm mb-2 mt-3"><?=_("Found:").count($documents)?></div>
+		<? endif;?>
+			<?php foreach($documents as $document): ?>
+				<div class="document mb-1 p-2">
+				<a href="<?=$router->url('view/'.$document['document_id'])?>"><div class="document-title"><?=$document['name']?></div></a>
+				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
+				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
+				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
+				<?php if(!empty($document['addition_id'])):?>
+					<span class="badge badge-info">
+					<?=count(explode(',', $document['addition_id']))?>
+					<?=TextHelper::decline(count(explode(',', $document['addition_id'])), 'додаток', 'додатка', 'додатків')?>
+						</span>
+				<?php endif;?>
+				</div>
+			<?php endforeach;?>
+			<?php if(empty($documents) && !$isSearch):?>
+				<div class="alert alert-null-result"><?=_("There aren't any documents yet")?></div>
+			<?php elseif(empty($documents) && $isSearch):?>
+				<div class="alert alert-null-result"><?=_("No documents was found")?></div>
+			<?php endif;?>
 		</div>
 
 		<?=$paginator?>

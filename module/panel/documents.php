@@ -278,20 +278,63 @@ switch($router->getAction())
 	}
 	break;
 
-	default:
-	$isPrivate = ($router->getAction() == 'private');
-
-	$paginator = new Paginator(
-		Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ?", 
-		[intval($profile->get('department_id')), $isPrivate]),
+	case 'search':
+	$isPrivate = !empty($router->getQuery('private'));
+	if(isset($_POST['search']) && strlen($_POST['search']) < 128 && strlen($_POST['search']) >= 3)
+	{
+		echo Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private`= ? AND (`name` LIKE ? OR `description` LIKE ?)", 
+		[intval($profile->get('department_id')), $isPrivate, '%'.$_POST['search'].'%', '%'.$_POST['search'].'%']);
+		$paginator = new Paginator(
+		Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private`= ? AND (`name` LIKE ? OR `description` LIKE ?)", 
+		[intval($profile->get('department_id')), $isPrivate, '%'.$_POST['search'].'%', '%'.$_POST['search'].'%']),
 		$profile->get('results_per_page'),
 		$router->getQuery("page"),
 		$router->url("/?page=(:num)"));
 
-	Database::setNextLimit($paginator->getDBLimit(), $profile->get('results_per_page'));
-	$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ? ORDER BY `document_id` DESC",
-		[intval($profile->get('department_id')), $isPrivate]);
+		Database::setNextLimit($paginator->getDBLimit(), $profile->get('results_per_page'));
 
+		$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private`= ? AND (`name` LIKE %?% OR `description` LIKE %?%)",
+			[intval($profile->get('department_id')), $isPrivate, '%'.$_POST['search'].'%', '%'.$_POST['search'].'%']);
+	}
+	else
+	{
+		$documents = null;
+		$sessionAlerts->add(_("Search keywords must be 3 or more/less then 128 long"), 'warning');
+	}
+	break;
+
+	default:
+	$isPrivate = !empty($router->getQuery('private'));
+	$isSearch = !empty($router->getQuery('search'));
+	if($isSearch && strlen($router->getQuery('search')) < 128 && strlen($router->getQuery('search')) >= 3)
+	{
+		$keywords = '%'.urldecode($router->getQuery('search')).'%';
+		$paginator = new Paginator(
+		Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private`= ? AND (`name` LIKE ? OR `description` LIKE ?)", 
+		[intval($profile->get('department_id')), $isPrivate, $keywords, $keywords]),
+		$profile->get('results_per_page'),
+		$router->getQuery("page"),
+		$router->url("/?private=".$router->getQuery('private')."&search=".$router->getQuery('search')."&page=(:num)"));
+
+		Database::setNextLimit($paginator->getDBLimit(), $profile->get('results_per_page'));
+
+		$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private`= ? AND (`name` LIKE ? OR `description` LIKE ?)",
+			[intval($profile->get('department_id')), $isPrivate, $keywords, $keywords]);
+		Template::setBackButtonUrl($router->url('/', 'panel/documents'));
+	}
+	else
+	{
+		$paginator = new Paginator(
+			Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ?", 
+			[intval($profile->get('department_id')), $isPrivate]),
+			$profile->get('results_per_page'),
+			$router->getQuery("page"),
+			$router->url("/?page=(:num)"));
+
+		Database::setNextLimit($paginator->getDBLimit(), $profile->get('results_per_page'));
+		$documents = Database::query("SELECT * FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = ? ORDER BY `document_id` DESC",
+			[intval($profile->get('department_id')), $isPrivate]);		
+	}
 	Template::setTitle(_("Department documents"));
 	if($isPrivate)Template::setTitle(_("My documents"));
 	break;

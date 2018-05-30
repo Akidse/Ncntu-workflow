@@ -1,6 +1,6 @@
 <?=$sessionAlerts->display()?>
 <div class="m-2 row">
-	<div class="col-4 p-1">
+	<div class="col-12 col-xl-4 p-1">
 		<div class="content-box">
 			<div class="content-box-header p-1"><?=_("Last documents")?></div>
 			<?php foreach($lastDocuments as $document):?>
@@ -12,7 +12,7 @@
 			<a href="<?=$router->url("", "panel/documents")?>" class="content-box-seemore p-2"><?=_("Go to documents")?></a>
 		</div>
 	</div>
-	<div class="col-4 p-1">
+	<div class="col-12 col-xl-4 p-1">
 		<div class="content-box">
 			<div class="content-box-header p-1"><?=_("Last decrees")?></div>
 			<?php foreach($lastDecrees as $decree):?>
@@ -24,7 +24,7 @@
 			<a href="<?=$router->url("", "panel/decrees")?>" class="content-box-seemore p-2"><?=_("Go to decrees")?></a>
 		</div>
 	</div>
-	<div class="col-4 p-1">
+	<div class="col-12 col-xl-4 p-1">
 		<div class="content-box">
 			<div class="content-box-header p-1"><?=_("Last prescriptions")?></div>
 			<?php foreach($lastPrescriptions as $prescription):?>

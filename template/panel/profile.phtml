@@ -1,33 +1,33 @@
 <?php if(!empty($router->getAction()) && $router->getAction() == 'edit'): ?>
 <?php $sessionAlerts->display(); ?>
 <form class="profile-block m-2" method="post" action="<?=$router->url('edit/general')?>">
-<h4 class="p-2">General data</h4>
+<h4 class="p-2"><?=_("General data")?></h4>
 <div class="row p-2">
-<div class="col-6">
+<div class="col-xl-6 col-12">
 	<div class="form-group">
-		<label>First Name:</label>
+		<label><?=_("First Name")?>:</label>
 		<input type="text" class="form-control" name="first_name" value="<?=$userProfile->get('first_name')?>">
 	</div>
 	<div class="form-group">
-		<label>Second Name:</label>
+		<label><?=_("Second Name")?>:</label>
 		<input type="text" class="form-control" name="middle_name" value="<?=$userProfile->get('middle_name')?>">
 	</div>
 	<div class="form-group">
-		<label>Last Name:</label>
+		<label><?=_("Last Name")?>:</label>
 		<input type="text" class="form-control" name="last_name" value="<?=$userProfile->get('last_name')?>">
 	</div>
 </div>
-<div class="col-6">
+<div class="col-xl-6 col-12">
 	<div class="form-group">
-		<label>Phone Number:</label>
+		<label><?=_("Phone Number")?>:</label>
 		<input type="text" class="form-control" name="phone_number" value="<?=$userResume['phone_number']?>">
 	</div>
 	<div class="form-group">
-		<label>Address:</label>
+		<label><?=_("Address")?>:</label>
 		<input type="text" class="form-control" name="address" value="<?=$userResume['address']?>">
 	</div>
 	<div class="form-group">
-		<label>City:</label>
+		<label><?=_("City")?>:</label>
 		<input type="text" class="form-control" name="city" value="<?=$userResume['city']?>">
 	</div>
 </div>
@@ -37,9 +37,9 @@
 </div>
 </form>
 <div class="row m-1">
-<form id="avatarForm" class="col-6 p-0" method="post" action="<?=$router->url('edit/avatar')?>">
+<form id="avatarForm" class="col-xl-6 col-12 p-0" method="post" action="<?=$router->url('edit/avatar')?>">
 	<div class="profile-block m-1">
-		<h4 class="p-2">Change avatar</h4>
+		<h4 class="p-2"><?=_("Change avatar")?></h4>
 		<div class="dropzone-form m-2" id="avatar">
 			<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
 		    <div class="dropzone-previews"></div>
@@ -47,19 +47,19 @@
 		<div class="m-2"><input class="btn btn-block btn-primary" type="submit" value="Замінити"></div>
 	</div>
 </form>
-<form class="col-6 p-0" method="post" action="<?=$router->url('edit/password')?>">
+<form class="col-xl-6 col-12 p-0" method="post" action="<?=$router->url('edit/password')?>">
 	<div class="profile-block m-1">
-	<h4 class="p-2">Change password</h4>
+	<h4 class="p-2"><?=_("Change password")?></h4>
 		<div class="form-group p-2">
-			<label>Old password:</label>
+			<label><?=_("Old password")?>:</label>
 			<input type="password" class="form-control" name="old_password">
 		</div>
 		<div class="form-group p-2">
-			<label>New password:</label>
+			<label><?=_("New password")?>:</label>
 			<input type="password" class="form-control" name="password">
 		</div>
 		<div class="form-group p-2">
-			<label>Repeat password:</label>
+			<label><?=_("Repeat password")?>:</label>
 			<input type="password" class="form-control" name="password_confirm">
 		</div>
 		<div class="m-2"><input class="btn btn-block btn-primary" type="submit" value="Зберегти"></div>
@@ -112,8 +112,8 @@ $(document).ready(function()
 	<?php endif;?>
 </div>
 <div class="row row-content p-2 profile">
-<div class="col-2"><img class="profile__avatar" src="<?=$userProfile->getAvatar()?>"></div>
-<div class="col-10">
+<div class="col-xl-2 col-12 text-center"><img class="profile__avatar" src="<?=$userProfile->getAvatar()?>"></div>
+<div class="col-xl-10 col-12">
 	<h4><?=$userProfile->getFullName()?></h4>
 	<?php if(!empty($userProfile->getDepartment())):?>
 	<p><b>Станція:</b> <?=$userProfile->getDepartment()->get('name')?></p>

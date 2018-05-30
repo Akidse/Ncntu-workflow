@@ -1,6 +1,7 @@
+<div class="shadow-background"></div>
 <div class='container-fluid p-0 m-0'>
 	<div class="row m-0 p-0" id="top_wrapper">
-		<div class="col-2 logo-wrapper"><span class="h2 align-middle system-naming-span"><?=_("NCNTU Workflow")?></span></div>
+		<div class="col-2 logo-wrapper"><span class="top-menu-button"><i class="fas fa-bars"></i></span><span class="h2 align-middle system-naming-span"><?=_("NCNTU Workflow")?></span></div>
 		<div class="col-10 p-0">
 		<div class="row" style="height: 100%;">
 		<div class="col-10">
@@ -15,7 +16,7 @@
 	</div>
 
 	<div id="content_wrapper" class="row">
-		<div class="col-2 p-0" id="left_side">
+		<div class="col-xl-2 col-12 p-0" id="left_side">
 			<div id="fixed-wrapper">
 			<div class="row m-0 p-0">
 			<div class="col-3 p-1 pr-0 text-center"><a href="<?=$router->url('', 'panel/profile')?>"><img class="img-fluid img-avatar" src='<?=$profile->getAvatar()?>'></a></div>
@@ -51,7 +52,7 @@
 						</a>
 						<ul>
 							<li>
-								<a href="<?=$router->url('private', 'panel/documents')?>">
+								<a href="<?=$router->url('?private', 'panel/documents')?>">
 									<i class="fas fa-file-alt"></i> <?=_("My documents")?>
 									<span class="badge badge-info">
 										<?=Database::query("SELECT COUNT(*) FROM `departments_documents` WHERE `department_id` = ? AND `is_archived` = 0 AND `is_private` = 1", 
@@ -116,6 +117,6 @@
 			<? endif;?>
 			</div>
 		</div>
-		<div class="col-10 p-0" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
+		<div class="col-xl-10 col-12 p-0" id="content"><?php include_once(PathManager::template($router->getModule()->getName(), $router->getModule()->getTypeName())); ?></div>
 	</div>
 </div>

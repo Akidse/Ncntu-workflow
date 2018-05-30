@@ -19,20 +19,20 @@ switch($router->getAction())
 	?>
 	<form class="m-2" method="post" action="<?=$router->url('create')?>" id="letterForm">
 	<div class="form-group row">
-		<div class="col-2">Отримувач</div>
-		<div class="col-6 p-0"><select class="receiver-select form-control" name="receiver"></select></div>
+		<div class="col-xl-2 col-12">Отримувач</div>
+		<div class="col-xl-6 col-12 p-xl-0"><select class="receiver-select form-control" name="receiver"></select></div>
 	</div>
 	<div class="form-group row">
-		<div class="col-2">Тема:</div>
-		<div class="col-6 p-0"><input class="form-control" type="text" name="subject"/></div>
+		<div class="col-xl-2 col-12">Тема:</div>
+		<div class="col-xl-6 col-12 p-xl-0"><input class="form-control" type="text" name="subject"/></div>
 	</div>
 	<div class="form-group row">
-		<div class="col-2">Повідомлення:</div>
-		<div class="col-6 p-0"><textarea class="form-control" name="message"></textarea></div>
+		<div class="col-xl-2 col-12">Повідомлення:</div>
+		<div class="col-xl-6 col-12 p-xl-0"><textarea class="form-control" name="message"></textarea></div>
 	</div>
 	<div class="row form-group">
-		<div class="col-2"><span class="align-middle"><label>Виберіть файли:</label></span></div>
-	    <div class="col-6 dropzone-form" id="files">
+		<div class="col-xl-2 col-12"><span class="align-middle"><label>Виберіть файли:</label></span></div>
+	    <div class="col-xl-6 col-12 dropzone-form" id="files">
 	    	<div class="dz-message">Перетягніть файли або клацніть щоб завантажити</div>
 	        <div class="dropzone-previews"></div>
 	    </div>
@@ -96,11 +96,11 @@ switch($router->getAction())
 		$countFiles = count(explode(',', $letter['files']));
 	?>
 		<a class="letter-block <?=($letter['unread']?'letter-block-unread':null)?> row ml-1 mr-1 p-2" href="<?=$router->url('view/'.$letter['letter_id'])?>">
-			<div class="col col-2"><?=$author->getFullName()?></div>
-			<div class="col col-6"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
+			<div class="col col-xl-2 col-12"><?=$author->getFullName()?></div>
+			<div class="col col-xl-6 col-12"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
 			<span class="text-sm"><?=(empty($letter['message'])?_('(no message)'):TextHelper::cut($letter['message'], 64, true))?></span></div>
-			<div class="col col-2 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
-			<div class="col col-2 text-right"><b><?=$letter['time_created']?></b></div>
+			<div class="col col-xl-2 col-6 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
+			<div class="col col-xl-2 col-6 text-right"><b><?=$letter['time_created']?></b></div>
 		</a>
 	<?php endforeach; ?>
 	</div>
@@ -118,11 +118,11 @@ switch($router->getAction())
 			$countFiles = count(array_filter(explode('/', $letter['files'])));
 		?>
 		<a class="letter-block row ml-1 mr-1 p-2" href="<?=$router->url('view/'.$letter['letter_id'])?>">
-			<div class="col col-2"><?=$receiverUser->getFullName()?></div>
-			<div class="col col-6"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
+			<div class="col col-xl-2 col-12"><?=$receiverUser->getFullName()?></div>
+			<div class="col col-xl-6 col-12"><?=(empty($letter['subject'])?_('(no subject)'):TextHelper::cut($letter['subject'], 64, true))?> - 
 			<span class="text-sm"><?=(empty($letter['message'])?_('(no message)'):TextHelper::cut($letter['message'], 64, true))?></span></div>
-			<div class="col col-2 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
-			<div class="col col-2 text-right"><b><?=$letter['time_created']?></b></div>
+			<div class="col col-xl-2 col-6 text-center"><?=($countFiles == 0?_('(no attachments)'):$countFiles.' '.TextHelper::decline($countFiles,"вкладення", "вкладення", "вкладень"))?></div>
+			<div class="col col-xl-2 col-6 text-right"><b><?=$letter['time_created']?></b></div>
 		</a>
 		<?php endforeach; ?>
 		<?php if(empty($letters))Template::displayAlert('Нема вихідних повідомлень', 'null-result')?>

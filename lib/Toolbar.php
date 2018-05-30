@@ -16,7 +16,7 @@ class Toolbar
 		$html = '<div class="toolbar">';
 		foreach($this->buttonsArray as $button)
 		{
-			$html.= '<a href="'.$button['url'].'" class="btn mr-2 '.$button['class'].'">'.$button['name'].'</a>';
+			$html.= '<a href="'.$button['url'].'" class="btn mr-2 mt-1 mt-xl-0 '.$button['class'].'">'.$button['name'].'</a>';
 		}
 		$html.= '</div>';
 

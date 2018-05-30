@@ -15,7 +15,7 @@ switch($router->getAction())
 		<?=($profile->hasPermission('handle_decrees')?
 		'<div class="toolbar"><a href="'.$router->url('remove/'.$decree['decree_id']).'"class="btn btn-danger">'._('Remove').'</a></div>':null)?>
 		<div class="row m-2" style="min-height: 90%">
-		<div class="col-5 pl-0">
+		<div class="col-xl-5 col-12 pl-0">
 		<h4><?=$decree['name']?></h4>
 		<?=$decree['description']?>
 		<div><b><?=_("Author")?>:</b> <?=$author->getFullName()?></div>
@@ -40,7 +40,7 @@ switch($router->getAction())
 			<?php endif;?>
 		</div>
 		</div>
-		<div class="col-7 pr-0 previewer-container">
+		<div class="col-xl-7 col-12 pr-0 previewer-container">
 		<?=$filePreviewer->display();?>
 		</div>
 		</div>

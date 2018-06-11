@@ -1,5 +1,9 @@
 #Ігнорування файлів
 files/*
+!files/.gitkeep 
+!files/avatars/.gitkeep 
 data/logs/*
+!data/logs/.gitkeep
+!data/.gitkeep
 data/config.ini
 data/config-work.ini

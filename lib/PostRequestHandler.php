@@ -2,13 +2,13 @@
 
 class PostRequestHandler
 {
-	public const STRING_TYPE = 1;
-	public const BOOL_TYPE = 2;
-	public const INT_TYPE = 3;
+	const STRING_TYPE = 1;
+	const BOOL_TYPE = 2;
+	const INT_TYPE = 3;
 
-	public const STRLEN_VALID = 1;
-	public const EMAIL_VALID = 2;
-	public const NUMBER_VALID = 3;
+	const STRLEN_VALID = 1;
+	const EMAIL_VALID = 2;
+	const NUMBER_VALID = 3;
 
 	private $fields = array();
 	private $validators = array();

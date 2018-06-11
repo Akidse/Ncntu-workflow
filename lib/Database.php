@@ -4,10 +4,10 @@ class Database
 {
 	private static $connection;
 
-	public const FETCH_ALL = 1;
-	public const FETCH_COLUMN = 2;
-	public const INSERT = 3;
-	public const SINGLE = 4;
+	const FETCH_ALL = 1;
+	const FETCH_COLUMN = 2;
+	const INSERT = 3;
+	const SINGLE = 4;
 
 	private static $limit = array();
 

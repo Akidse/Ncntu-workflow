@@ -1,0 +1,21 @@
+<div class="m-2 documents-list">
+			<?php foreach($documents as $document): ?>
+				<div class="document mb-1 p-2">
+				<a href="<?=$router->url('view/'.$document['document_id'], 'panel/documents')?>"><div class="document-title"><?=$document['name']?></div></a>
+				<div class="document-author"><span class="text-sm">Автор: <b><?=((new User($document['user_id']))->getFullName())?></b></span></div>
+				<div class="document-desc"><span class="text-sm"><?=TextHelper::cut($document['description'], 300, true)?></span></div>
+				<span class="badge badge-primary"><?=((new File($document['file_id']))->getFormat())?></span>
+				<?php if(!empty($document['addition_id'])):?>
+					<span class="badge badge-info">
+					<?=count(explode(',', $document['addition_id']))?>
+					<?=TextHelper::decline(count(explode(',', $document['addition_id'])), 'додаток', 'додатка', 'додатків')?>
+						</span>
+				<?php endif;?>
+				<a class="btn btn-danger btn-sm" href="<?=$router->url('delete/'.$document['document_id'])?>">Видалити</a>
+				</div>
+			<?php endforeach;?>
+			<?php if(empty($documents)):?>
+				<div class="alert alert-null-result"><?=_("There aren't any documents yet")?></div>
+			<?php endif;?>
+		</div>
+<?=$paginator?>

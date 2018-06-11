@@ -82,4 +82,9 @@ class PathManager
 
 		return self::file('avatars/'.$fileName, $isUrl);
 	}
+
+	public static function logs($logFileName)
+	{
+		return self::getRootDirectory().'/data/logs/'.$logFileName.'.log';
+	}
 }

@@ -9,6 +9,8 @@ define('ROOT', dirname(__FILE__));
 session_start();
 include_once ROOT."/lib/autoload.php";
 
+$logger = new Logger();
+
 if(!file_exists(PathManager::data('config.ini')))
 	copy(PathManager::data('config_default.ini'), PathManager::data('config.ini'));
 

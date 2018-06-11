@@ -49,6 +49,7 @@ switch($router->getAction())
 		}
 		Database::query("DELETE FROM `decrees` WHERE `decree_id` = ?", [intval($router->getParams(0))]);
 		$sessionAlerts->add(_("Decree removed"), 'success');
+		$logger->write('removed decree[id='.$decree['decree_id'].']', $profile);
 		$router->redirect($router->url('', 'panel/decrees'));
 	break;
 	case 'remove':
@@ -88,10 +89,11 @@ switch($router->getAction())
 
 		if($postHandler->isValid())
 		{
-			Database::query("INSERT INTO `decrees` (`name`, `description`, `author_id`, `public`, `file_id`, `additions_id`)VALUES(?, ?, ?, ?, ?, ?)",
+			$decreeId = Database::query("INSERT INTO `decrees` (`name`, `description`, `author_id`, `public`, `file_id`, `additions_id`)VALUES(?, ?, ?, ?, ?, ?)",
 				[$postHandler->get('name'), $postHandler->get('desc'), $profile->get('user_id'), true,
 					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId')]);
 			$sessionAlerts->add(_('Decree published successfully'), 'success');
+			$logger->write('create decree[id='.$decreeId.']', $profile);
 			$router->redirect($router->url());
 		}
 		else

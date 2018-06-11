@@ -143,7 +143,7 @@ if(!empty($router->getAction()) && $router->getAction() == 'edit')
 				[$generalDataFormHandler->get('phone_number'), $generalDataFormHandler->get('address'), $generalDataFormHandler->get('city'),
 					$userProfile->get('user_id')]);
 			$sessionAlerts->add('Профіль успішно відредагований', 'success');
-
+			$logger->write('changed profile data', $profile);
 			$profile->updateData();
 			$userProfile = new User($profile->get('user_id'));
 			$userResume = Database::query("SELECT * FROM `users_resume` WHERE `user_id` = ?", [$userProfile->get('user_id')], Database::SINGLE);
@@ -161,6 +161,7 @@ if(!empty($router->getAction()) && $router->getAction() == 'edit')
 			Database::query("UPDATE `users` SET `avatar` = ? WHERE `user_id` = ?", [$avatarFormHandler->get('avatar_file'), $userProfile->get('user_id')]);
 			$profile->updateData();
 			$sessionAlerts->add('Аватар завантажений успішно', 'success');
+			$logger->write('changed profile avatar', $profile);
 		}
 	}
 
@@ -187,6 +188,7 @@ if(!empty($router->getAction()) && $router->getAction() == 'edit')
 			$profile->updateData();
 			$authorizeSession->set($profile->get('user_id'), $profile->get('password_hash'));
 			$sessionAlerts->add('Пароль успішно змінено', 'success');
+			$logger->write('changed profile password', $profile);
 		}
 	}
 

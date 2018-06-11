@@ -91,6 +91,7 @@ switch($router->getAction())
 		Database::query("DELETE FROM `departments_documents_versions` WHERE `document_id` = ?", [$document['document_id']]);
 		Database::query("DELETE FROM `archive_requests` WHERE `document_id` = ?", [$document['document_id']]);
 		$sessionAlerts->add(_("Document was removed"), 'success');
+		$logger->write('removed document[id='.$document['document_id'].']', $profile);
 		$router->redirect($router->url());
 	}
 	Template::setBackButtonUrl($router->url('/view/'.$document['document_id']));
@@ -107,10 +108,11 @@ switch($router->getAction())
 
 		if($postHandler->isValid())
 		{
-			Database::query("INSERT INTO `departments_documents` (`name`, `description`, `user_id`, `department_id`, `file_id`, `addition_id`, `is_private`)VALUES(?, ?, ?, ?, ?, ?, ?)",
+			$documentId = Database::query("INSERT INTO `departments_documents` (`name`, `description`, `user_id`, `department_id`, `file_id`, `addition_id`, `is_private`)VALUES(?, ?, ?, ?, ?, ?, ?)",
 				[$postHandler->get('name'), $postHandler->get('desc'), $profile->get('user_id'), $profile->get('department_id'), 
 					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId'), $isPrivate]);
 			$sessionAlerts->add(_("Document was created successfully"), 'success');
+			$logger->write('create document[id='.$documentId.']', $profile);
 			$router->redirect($router->url(($isPrivate?'private':null)));
 		}
 		else
@@ -190,6 +192,7 @@ switch($router->getAction())
 				[$postHandler->get('name'), $postHandler->get('desc'), $mainFileId, $additionFiles, TimeHelper::getCurrentTimestamp(), $document['document_id']]);
 
 			$sessionAlerts->add(_("Changes to document are saved"), 'success');
+			$logger->write('edited document[id='.$document['document_id'].']', $profile);
 			$router->redirect($router->url('view/'.$document['document_id']));
 		}
 		else
@@ -219,6 +222,7 @@ switch($router->getAction())
 		Database::query("INSERT INTO `archive_requests` (`document_id`, `user_id`, `time`, `type`)VALUES(?, ?, ?, ?)",
 			[$document['document_id'], $profile->get('user_id'), TimeHelper::getCurrentTimestamp(), 0]);
 		$sessionAlerts->add(_("Archive request was created"), 'success');
+		$logger->write('sent document[id='.$document['document_id'].'] to archive', $profile);
 		$router->redirect($router->url('/view/'.$document['document_id']));
 	}
 

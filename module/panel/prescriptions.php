@@ -49,6 +49,7 @@ switch($router->getAction())
 		}
 		Database::query("DELETE FROM `prescriptions` WHERE `prescription_id` = ?", [intval($router->getParams(0))]);
 		$sessionAlerts->add(_("Prescription removed"), 'success');
+		$logger->write('removed prescription[id='.$prescription['prescription_id'].']', $profile);
 		$router->redirect($router->url('', 'panel/prescriptions'));
 	break;
 	case 'remove':
@@ -88,10 +89,11 @@ switch($router->getAction())
 
 		if($postHandler->isValid())
 		{
-			Database::query("INSERT INTO `prescriptions` (`name`, `description`, `author_id`, `public`, `file_id`, `additions_id`)VALUES(?, ?, ?, ?, ?, ?)",
+			$prescriptionId = Database::query("INSERT INTO `prescriptions` (`name`, `description`, `author_id`, `public`, `file_id`, `additions_id`)VALUES(?, ?, ?, ?, ?, ?)",
 				[$postHandler->get('name'), $postHandler->get('desc'), $profile->get('user_id'), true,
 					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId')]);
 			$sessionAlerts->add(_('Prescription published succesfully'), 'success');
+			$logger->write('create prescription[id='.$prescriptionId.']', $profile);
 			$router->redirect($router->url());
 		}
 		else

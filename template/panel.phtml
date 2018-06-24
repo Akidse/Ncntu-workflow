@@ -35,6 +35,11 @@
 					<?endif;?>
 				</div>
 			</div>
+			<?php
+				$panelNotificationsCount = Database::query("SELECT COUNT(*) FROM `users_notifications` WHERE `user_id` = ? AND `unread` = 1", [$profile->get('user_id')]);
+				if($panelNotificationsCount > 0):?>
+				<a href="<?=$router->url('', 'panel/notifications')?>" class="btn btn-block btn-sm m-2 btn-info mt-0">Нові сповіщення <span class="badge badge-danger"><?=$panelNotificationsCount?></span></a>
+			<?php endif;?>
 			</div>
 			<?if(!empty($profile->getDepartment())):
 				$newDecreesCount = Database::query("SELECT COUNT(*) FROM `decrees` WHERE `time_created` > ?", [$profile->get('decree_last_view')]);

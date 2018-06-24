@@ -44,7 +44,7 @@ if($authorizeSession->try())
 	$profile = new UserProfile($authorizeSession->getUserId());
 }
 
-if(!$router->isAvailableForGuests() && !$profile->isLogged())
+if(!$router->isAvailableForGuests() && !$profile->isLogged() && $router->getModule()->getType() != Module::_API)
 {
 	$router->redirect('');
 }
@@ -60,5 +60,5 @@ else
 	$router->redirect($router->url('', '404'));
 	exit;
 }
-include_once PathManager::template("common");
+if($router->getModule()->getType() != Module::_API)include_once PathManager::template("common");
 ?>

@@ -1,0 +1,11 @@
+<div class="list">
+<?php foreach($notifications as $notice):?>
+	<div class="list-block m-2 p-2">
+	<div class="list-block-title"><?=$notice['date_created']?></div>
+	<?=$notice['text']?>
+	</div>
+<?php endforeach;?>
+</div>
+<?php if(empty($notifications)):?>
+	<div class="alert alert-null-result">Немає нових сповіщень</div>
+<?php endif;?>

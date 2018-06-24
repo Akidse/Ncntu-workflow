@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SEDNKNTU\n"
-"POT-Creation-Date: 2018-05-24 21:35+0300\n"
-"PO-Revision-Date: 2018-05-24 21:41+0300\n"
+"POT-Creation-Date: 2018-06-24 21:17+0300\n"
+"PO-Revision-Date: 2018-06-24 21:20+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: uk_UA\n"
@@ -44,7 +44,7 @@ msgstr "Управління правами користувацьких гру�
 msgid "Changes saved successfully"
 msgstr "Зміни збережені успішно"
 
-#: module/admin/system.php:36 template/admin.phtml:43
+#: module/admin/system.php:36 template/admin.phtml:42
 #: template/admin/index.phtml:5
 msgid "System settings"
 msgstr "Налаштування системи"
@@ -53,7 +53,7 @@ msgstr "Налаштування системи"
 msgid "Users departments"
 msgstr "Налаштування користувацької станції"
 
-#: module/admin/users.php:4 template/admin.phtml:40
+#: module/admin/users.php:4 template/admin.phtml:39
 #: template/admin/index.phtml:2
 msgid "Users management"
 msgstr "Управління користувачами"
@@ -82,35 +82,35 @@ msgstr "403: Доступ заборонено"
 msgid "Installation"
 msgstr "Встановлення"
 
-#: module/install.php:90 module/reg.php:82
+#: module/install.php:90 module/reg.php:78
 msgid "Email field is empty or not valid"
 msgstr "Поле 'E-mail' пусте або заповнене неправильно"
 
-#: module/install.php:91 module/reg.php:83
+#: module/install.php:91 module/reg.php:79
 msgid "Password field is empty or not valid"
 msgstr "Поле паролю пусте або заповнене неправильно"
 
-#: module/install.php:92 module/reg.php:84
+#: module/install.php:92 module/reg.php:80
 msgid "Password confirm field is empty"
 msgstr "Поле підтвердження паролю пусте або заповнене неправильно"
 
-#: module/install.php:93 module/reg.php:85
+#: module/install.php:93 module/reg.php:81
 msgid "First name is empty or it's length is not valid"
 msgstr "Поле імені пусте або заповнене неправильно"
 
-#: module/install.php:94 module/reg.php:86
+#: module/install.php:94 module/reg.php:82
 msgid "Middle name is empty or it's length is not valid"
 msgstr "Поле по батькові пусте або заповнене неправильно"
 
-#: module/install.php:95 module/reg.php:87
+#: module/install.php:95 module/reg.php:83
 msgid "Last name is empty or it's length is not valid"
 msgstr "Поле прізвища пусте або заповнене неправильно"
 
-#: module/install.php:99 module/reg.php:94
+#: module/install.php:99 module/reg.php:87
 msgid "Passwords have to be the same"
 msgstr "Паролі повинні співпадати"
 
-#: module/install.php:105 module/reg.php:100
+#: module/install.php:105 module/reg.php:93
 msgid "Email is not valid"
 msgstr "E-mail неправильний"
 
@@ -122,15 +122,15 @@ msgstr "Адміністратор був створений успішно"
 msgid "Config saved successfully"
 msgstr "Конфігурація збережена успішно"
 
-#: module/install.php:151 module/install.php:192
+#: module/install.php:151 module/install.php:202
 msgid "Input data is incorrect"
 msgstr "Вхідні дані некоректні"
 
-#: module/install.php:184
+#: module/install.php:186
 msgid "Database connected"
 msgstr "База даних приєднана"
 
-#: module/install.php:189
+#: module/install.php:199
 msgid "Could not connect to database:"
 msgstr "Проблеми з підключенням до бази даних:"
 
@@ -146,7 +146,7 @@ msgstr "Запит на додавання в архів відхилено"
 msgid "Archive requests"
 msgstr "Запити в архів"
 
-#: module/panel/archive.php:40 template/panel.phtml:96
+#: module/panel/archive.php:40 template/panel.phtml:102
 msgid "Archive"
 msgstr "Архів"
 
@@ -154,39 +154,39 @@ msgstr "Архів"
 msgid "Decree removed"
 msgstr "Указ видалений"
 
-#: module/panel/decrees.php:58
+#: module/panel/decrees.php:59
 msgid "Remove a decree"
 msgstr "Видалити наказ"
 
-#: module/panel/decrees.php:76
+#: module/panel/decrees.php:77
 msgid "Decree view"
 msgstr "Перегляд наказу"
 
-#: module/panel/decrees.php:84 module/panel/documents.php:103
-#: module/panel/documents.php:163 module/panel/prescriptions.php:84
+#: module/panel/decrees.php:85 module/panel/documents.php:104
+#: module/panel/documents.php:165 module/panel/prescriptions.php:85
 msgid "Too long or too small name"
 msgstr "Занадто коротке або занадто довге ім'я"
 
-#: module/panel/decrees.php:85 module/panel/documents.php:104
-#: module/panel/documents.php:164 module/panel/prescriptions.php:85
+#: module/panel/decrees.php:86 module/panel/documents.php:105
+#: module/panel/documents.php:166 module/panel/prescriptions.php:86
 msgid "Too long description"
 msgstr "Занадто довгий опис"
 
-#: module/panel/decrees.php:86 module/panel/documents.php:105
-#: module/panel/documents.php:165 module/panel/prescriptions.php:86
+#: module/panel/decrees.php:87 module/panel/documents.php:106
+#: module/panel/documents.php:167 module/panel/prescriptions.php:87
 msgid "Problems with uploading main file"
 msgstr "Помилка при завантаженні головного файлу"
 
-#: module/panel/decrees.php:87 module/panel/documents.php:106
-#: module/panel/documents.php:166 module/panel/prescriptions.php:87
+#: module/panel/decrees.php:88 module/panel/documents.php:107
+#: module/panel/documents.php:168 module/panel/prescriptions.php:88
 msgid "Problems with uploading addition files"
 msgstr "Проблеми з завантаженням додатків"
 
-#: module/panel/decrees.php:94
+#: module/panel/decrees.php:95
 msgid "Decree published successfully"
 msgstr "Наказ опублікований успішно"
 
-#: module/panel/decrees.php:113 template/panel.phtml:66
+#: module/panel/decrees.php:115 template/panel.phtml:72
 msgid "Decrees"
 msgstr "Накази"
 
@@ -206,70 +206,74 @@ msgstr "Версії документу"
 msgid "Document was removed"
 msgstr "Документ видалений"
 
-#: module/panel/documents.php:97
+#: module/panel/documents.php:98
 msgid "Remove a document"
 msgstr "Видалити документ"
 
-#: module/panel/documents.php:113
+#: module/panel/documents.php:114
 msgid "Document was created successfully"
 msgstr "Документ створений успішно"
 
-#: module/panel/documents.php:128
+#: module/panel/documents.php:130
 msgid "New department document"
 msgstr "Новий документ"
 
-#: module/panel/documents.php:131
+#: module/panel/documents.php:133
 msgid "New private document"
 msgstr "Новий приватний документ"
 
-#: module/panel/documents.php:192
+#: module/panel/documents.php:194
 msgid "Changes to document are saved"
 msgstr "Зміни в документі збережені успішно"
 
-#: module/panel/documents.php:207
+#: module/panel/documents.php:210
 msgid "Edit the document"
 msgstr "Редагувати документ"
 
-#: module/panel/documents.php:221
+#: module/panel/documents.php:224
 msgid "Archive request was created"
 msgstr "Запит в архів було створено"
 
-#: module/panel/documents.php:226
+#: module/panel/documents.php:230
 msgid "Create request to archive"
 msgstr "Перемістити в архів"
 
-#: module/panel/documents.php:262
+#: module/panel/documents.php:266
 msgid "Document view"
 msgstr "Перегляд документу"
 
-#: module/panel/documents.php:271
+#: module/panel/documents.php:275
 msgid "Send to archive"
 msgstr "Надіслати в архів"
 
-#: module/panel/documents.php:272
+#: module/panel/documents.php:276
 msgid "Move to department"
 msgstr "Перемістити в станцію"
 
-#: module/panel/documents.php:273 template/admin/users.phtml:86
+#: module/panel/documents.php:277 template/admin/users.phtml:86
 msgid "Edit"
 msgstr "Редагувати"
 
-#: module/panel/documents.php:275
+#: module/panel/documents.php:279
 msgid "Create signature request"
 msgstr "Створити запит на підпис"
 
-#: module/panel/documents.php:277 template/admin/users.phtml:74
+#: module/panel/documents.php:281 template/admin/users.phtml:74
 #: template/admin/users.phtml:85 template/panel/decrees.phtml:9
 #: template/panel/decrees.phtml:16 template/panel/documents.phtml:42
 #: template/panel/prescriptions.phtml:9 template/panel/prescriptions.phtml:16
 msgid "Remove"
 msgstr "Видалити"
 
-#: module/panel/documents.php:295 template/panel.phtml:46
+#: module/panel/documents.php:306
+msgid "Search keywords must be 3 or more/less then 128 long"
+msgstr "Пошукові слова повинні бути 3 або більше символів"
+
+#: module/panel/documents.php:342 template/panel.phtml:52
 msgid "Department documents"
 msgstr "Документи станції"
 
-#: module/panel/documents.php:296 template/panel.phtml:55
+#: module/panel/documents.php:343 template/panel.phtml:61
 msgid "My documents"
 msgstr "Мої документи"
 
@@ -281,19 +285,19 @@ msgstr "Користувацька панель"
 msgid "Prescription removed"
 msgstr "Розпорядження видалено"
 
-#: module/panel/prescriptions.php:58
+#: module/panel/prescriptions.php:59
 msgid "Remove a prescription"
 msgstr "Видалити розпорядження"
 
-#: module/panel/prescriptions.php:76
+#: module/panel/prescriptions.php:77
 msgid "Prescription view"
 msgstr "Перегляд розпорядження"
 
-#: module/panel/prescriptions.php:94
+#: module/panel/prescriptions.php:95
 msgid "Prescription published succesfully"
 msgstr "Розпорядження опубліковано успішно"
 
-#: module/panel/prescriptions.php:113 template/panel.phtml:72
+#: module/panel/prescriptions.php:115 template/panel.phtml:78
 msgid "Prescriptions"
 msgstr "Розпорядження"
 
@@ -301,33 +305,37 @@ msgstr "Розпорядження"
 msgid "Registration"
 msgstr "Реєстрація"
 
-#: module/reg.php:106
+#: module/reg.php:99
 msgid "This email already registered"
 msgstr "Ця поштова скринька уже зареєстрована в системі"
 
-#: module/reg.php:112
+#: module/reg.php:105
 msgid "Captcha is not valid"
 msgstr "Код перевірки неправильний"
 
-#: module/reg.php:121
+#: module/reg.php:114
 msgid "You are registered successfully"
 msgstr "Ви зареєстровані успішно"
 
-#: template/admin.phtml:3 template/panel.phtml:3
+#: template/admin.phtml:3 template/panel.phtml:4
 msgid "NCNTU Workflow"
 msgstr "СЕД НКНТУ"
 
-#: template/admin.phtml:41 template/admin/index.phtml:3
+#: template/admin.phtml:40 template/admin/index.phtml:3
 msgid "Departments management"
 msgstr "Управління  станціями"
 
-#: template/admin.phtml:42 template/admin/index.phtml:4
+#: template/admin.phtml:41 template/admin/index.phtml:4
 msgid "Documents management"
 msgstr "Управління документами"
 
-#: template/admin.phtml:44 template/admin/index.phtml:6
+#: template/admin.phtml:43 template/admin/index.phtml:6
 msgid "Logs and statistics"
 msgstr "Логи та статистика"
+
+#: template/admin/documents.phtml:18 template/panel/documents.phtml:229
+msgid "There aren't any documents yet"
+msgstr "Немає документів"
 
 #: template/admin/system.phtml:4
 msgid "Default title"
@@ -470,7 +478,7 @@ msgstr "Ім'я"
 msgid "Middle name"
 msgstr "По батькові"
 
-#: template/install.phtml:80
+#: template/install.phtml:80 template/panel/profile.phtml:62
 msgid "Repeat password"
 msgstr "Підтвердження паролю"
 
@@ -522,47 +530,47 @@ msgstr "Вітаємо в інсталяції"
 msgid "Start installation"
 msgstr "Почати установлення"
 
-#: template/panel.phtml:77
+#: template/panel.phtml:83
 msgid "Incoming department requests"
 msgstr "Вхідні запити станції"
 
-#: template/panel.phtml:83
+#: template/panel.phtml:89
 msgid "Outcoming requests"
 msgstr "Вихідні запити"
 
-#: template/panel.phtml:86
+#: template/panel.phtml:92
 msgid "Letters"
 msgstr "Листи"
 
-#: template/panel.phtml:89
+#: template/panel.phtml:95
 msgid "Incoming"
 msgstr "Вхідні"
 
-#: template/panel.phtml:91
+#: template/panel.phtml:97
 msgid "Outcoming"
 msgstr "Вихідні"
 
-#: template/panel.phtml:99
+#: template/panel.phtml:105
 msgid "Incoming requests"
 msgstr "Вхідні запити"
 
-#: template/panel.phtml:107
+#: template/panel.phtml:113
 msgid "Create order"
 msgstr "Створити наказ"
 
-#: template/panel.phtml:110
+#: template/panel.phtml:116
 msgid "Create prescription"
 msgstr "Створити розпорядження"
 
-#: template/panel.phtml:112
+#: template/panel.phtml:118
 msgid "Create letter"
 msgstr "Створити лист"
 
-#: template/panel.phtml:113 template/panel/documents.phtml:201
+#: template/panel.phtml:119 template/panel/documents.phtml:207
 msgid "Upload document"
 msgstr "Завантажити документ"
 
-#: template/panel.phtml:115
+#: template/panel.phtml:121
 msgid "You are not in any department"
 msgstr "Ви не відноситесь до жодної станції"
 
@@ -689,6 +697,10 @@ msgstr "Опис документу"
 msgid "Choose addition files (unnecessary)"
 msgstr "Виберіть додатки(не обов'язково)"
 
+#: template/panel/documents.phtml:71 template/panel/documents.phtml:125
+msgid "Create"
+msgstr "Створити"
+
 #: template/panel/documents.phtml:112
 msgid "Choose main file(current file will be removed)"
 msgstr "Виберіть головний файл(старий файл буде видалено)"
@@ -717,32 +729,48 @@ msgstr "Створено"
 msgid "Archive request was created and document waits for response"
 msgstr "Цей документ чекає на відповідь щодо перенесення в архів"
 
-#: template/panel/index.phtml:4
+#: template/panel/documents.phtml:204
+msgid "Enter keywords in name or description of document"
+msgstr "Введіть ключові слова"
+
+#: template/panel/documents.phtml:205
+msgid "Search"
+msgstr "Пошук"
+
+#: template/panel/documents.phtml:212
+msgid "Found:"
+msgstr "Знайдено:"
+
+#: template/panel/documents.phtml:231
+msgid "No documents was found"
+msgstr "Документів не знайдено"
+
+#: template/panel/index.phtml:5
 msgid "Last documents"
 msgstr "Останні документи"
 
-#: template/panel/index.phtml:10 template/panel/index.phtml:22
-#: template/panel/index.phtml:34
+#: template/panel/index.phtml:11 template/panel/index.phtml:23
+#: template/panel/index.phtml:35
 msgid "No documents"
 msgstr "Немає документів"
 
-#: template/panel/index.phtml:11
+#: template/panel/index.phtml:12
 msgid "Go to documents"
 msgstr "Перейди до документів"
 
-#: template/panel/index.phtml:16
+#: template/panel/index.phtml:17
 msgid "Last decrees"
 msgstr "Останні накази"
 
-#: template/panel/index.phtml:23
+#: template/panel/index.phtml:24
 msgid "Go to decrees"
 msgstr "Перейти до наказів"
 
-#: template/panel/index.phtml:28
+#: template/panel/index.phtml:29
 msgid "Last prescriptions"
 msgstr "Останні розпорядження"
 
-#: template/panel/index.phtml:35
+#: template/panel/index.phtml:36
 msgid "Go to prescriptions"
 msgstr "Перейти до розпоряджень"
 
@@ -777,6 +805,50 @@ msgstr "Виберіть додатки(не обов'язково)"
 #: template/panel/prescriptions.phtml:163
 msgid "Add prescription"
 msgstr "Додати розпорядження"
+
+#: template/panel/profile.phtml:4
+msgid "General data"
+msgstr "Основні дані"
+
+#: template/panel/profile.phtml:8
+msgid "First Name"
+msgstr "Ім'я"
+
+#: template/panel/profile.phtml:12
+msgid "Second Name"
+msgstr "По батькові"
+
+#: template/panel/profile.phtml:16
+msgid "Last Name"
+msgstr "Прізвище"
+
+#: template/panel/profile.phtml:22
+msgid "Phone Number"
+msgstr "Телефон"
+
+#: template/panel/profile.phtml:26
+msgid "Address"
+msgstr "Адреса"
+
+#: template/panel/profile.phtml:30
+msgid "City"
+msgstr "Місто"
+
+#: template/panel/profile.phtml:42
+msgid "Change avatar"
+msgstr "Змінити фото"
+
+#: template/panel/profile.phtml:52
+msgid "Change password"
+msgstr "Змінити пароль"
+
+#: template/panel/profile.phtml:54
+msgid "Old password"
+msgstr "Старий пароль"
+
+#: template/panel/profile.phtml:58
+msgid "New password"
+msgstr "Новий пароль"
 
 #: template/reg.phtml:9
 msgid "Password confirm"

@@ -2,8 +2,8 @@
 
 class CaptchaFactory 
 {
-	public const RECAPTCHA = 0;
-	public const STOCK_CAPTCHA = 1;
+	const RECAPTCHA = 0;
+	const STOCK_CAPTCHA = 1;
 	private $captchaType = 0;
 	private $captchaInstance;
 

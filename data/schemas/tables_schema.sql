@@ -8,7 +8,7 @@ CREATE TABLE `archive_requests` (
   `type` tinyint(1) DEFAULT NULL,
   `document_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `time` timestamp NOT NULL
+  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -17,7 +17,7 @@ CREATE TABLE `decrees` (
   `author_id` int(11) NOT NULL,
   `name` varchar(512) DEFAULT NULL,
   `description` varchar(4096) DEFAULT NULL,
-  `file_id` int(11) NOT NULL,
+  `file_id` int(11) DEFAULT NULL,
   `additions_id` varchar(128) DEFAULT NULL,
   `public` tinyint(1) DEFAULT '0',
   `time_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -28,16 +28,8 @@ CREATE TABLE `departments` (
   `department_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `subdepartment_id` int(11) DEFAULT '0',
-  `public` tinyint(1) NOT NULL,
-  `main` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `departments_backup` (
-  `department_id` int(11) NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `subdepartment_id` int(11) DEFAULT '0',
-  `public` tinyint(1) NOT NULL
+  `public` tinyint(1) DEFAULT NULL,
+  `main` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `departments_documents` (
@@ -46,12 +38,12 @@ CREATE TABLE `departments_documents` (
   `description` varchar(1024) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
-  `file_id` int(11) NOT NULL,
+  `file_id` int(11) DEFAULT NULL,
   `addition_id` varchar(64) DEFAULT NULL,
   `is_archived` tinyint(1) DEFAULT '0',
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
-  `time_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `time_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `is_private` tinyint(1) DEFAULT '0',
+  `time_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_updated` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -62,18 +54,18 @@ CREATE TABLE `departments_documents_versions` (
   `description` varchar(1024) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `department_id` int(11) DEFAULT NULL,
-  `file_id` int(11) NOT NULL,
+  `file_id` int(11) DEFAULT NULL,
   `addition_id` varchar(64) DEFAULT NULL,
   `is_archived` tinyint(1) DEFAULT NULL,
-  `time_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `time_deprecated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `editor_id` int(11) NOT NULL
+  `time_created` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `time_deprecated` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `editor_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `departments_permissions` (
   `permission_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
-  `description` varchar(255) NOT NULL
+  `description` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -96,8 +88,8 @@ CREATE TABLE `documents_requests` (
   `document_id` int(11) NOT NULL,
   `department_id` int(11) NOT NULL,
   `description` varchar(1024) DEFAULT NULL,
-  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_done` timestamp NULL DEFAULT NULL
+  `date_created` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `date_done` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -105,16 +97,16 @@ CREATE TABLE `documents_signs` (
   `sign_id` int(11) NOT NULL,
   `document_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `files` (
   `file_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `real_name` varchar(255) NOT NULL,
+  `real_name` varchar(255) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
-  `addition_to` int(11) NOT NULL
+  `addition_to` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -125,14 +117,14 @@ CREATE TABLE `letters` (
   `subject` varchar(512) DEFAULT NULL,
   `message` varchar(2048) DEFAULT NULL,
   `files` varchar(64) DEFAULT NULL,
-  `unread` tinyint(1) NOT NULL DEFAULT '1',
-  `time_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `unread` tinyint(1) DEFAULT '1',
+  `time_created` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `message_types` (
   `type_id` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL
+  `name` varchar(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -176,18 +168,12 @@ CREATE TABLE `users_groups` (
   `name` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `users_groups` (`group_id`, `name`) VALUES
-(1, 'Адміністратор'),
-(2, 'Секретар'),
-(3, 'Архіваріус'),
-(4, 'Директор'),
-(5, 'Заступник директора');
-
 CREATE TABLE `users_groups_permissions` (
   `permission_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `description` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `users_groups_permitted` (
   `permit_id` int(11) NOT NULL,
@@ -218,8 +204,6 @@ ALTER TABLE `archive_requests`
 ALTER TABLE `decrees`
   ADD PRIMARY KEY (`decree_id`);
 ALTER TABLE `departments`
-  ADD PRIMARY KEY (`department_id`);
-ALTER TABLE `departments_backup`
   ADD PRIMARY KEY (`department_id`);
 ALTER TABLE `departments_documents`
   ADD PRIMARY KEY (`document_id`);
@@ -266,7 +250,7 @@ ALTER TABLE `departments_documents_versions`
   MODIFY `version_id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `departments_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT = 3;
 ALTER TABLE `departments_permitted`
   MODIFY `permit_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `documents_requests`
@@ -284,7 +268,7 @@ ALTER TABLE `roles`
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users_groups`
-  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users_groups_permissions`
   MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users_groups_permitted`
@@ -293,7 +277,3 @@ ALTER TABLE `users_notifications`
   MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users_resume`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -98,7 +98,8 @@ switch($router->getAction())
 	Template::setTitle(_("Remove a document").' - '.$document['name']);
 	break;
 	case 'create':
-	$isPrivate = ($router->getParams(0) == 'private');
+	$isPrivate = ($router->getQuery('private') == 1);//nice bug
+	$sqlIsPrivate = ($isPrivate == true?'1':'0');//"nice solution", hehe
 	if($postHandler->proceed())
 	{
 		if(!$postHandler->isValid('name'))$sessionAlerts->add(_('Too long or too small name'), 'error');
@@ -110,7 +111,7 @@ switch($router->getAction())
 		{
 			$documentId = Database::query("INSERT INTO `departments_documents` (`name`, `description`, `user_id`, `department_id`, `file_id`, `addition_id`, `is_private`)VALUES(?, ?, ?, ?, ?, ?, ?)",
 				[$postHandler->get('name'), $postHandler->get('desc'), $profile->get('user_id'), $profile->get('department_id'), 
-					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId'), $isPrivate]);
+					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId'), $sqlIsPrivate]);
 			$sessionAlerts->add(_("Document was created successfully"), 'success');
 			$logger->write('create document[id='.$documentId.']', $profile);
 			$router->redirect($router->url(($isPrivate?'private':null)));

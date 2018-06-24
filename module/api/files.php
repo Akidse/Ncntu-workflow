@@ -36,8 +36,14 @@ switch($router->getAction())
 			$tempFile = $file['tmp_name'];
 			$targetFileName = FileHelper::generateRandomName(pathinfo($file['name'], PATHINFO_EXTENSION));
 			$targetFile = PathManager::file($targetFileName);
-			move_uploaded_file($tempFile, $targetFile);
-			$addedFilesIds[] = Database::query("INSERT INTO `files` (`name`, `real_name`, `user_id`)VALUES(?, ?, ?)", [$file['name'], $targetFileName, $profile->get("user_id")]);
+			if(move_uploaded_file($tempFile, $targetFile))
+			{
+				$addedFilesIds[] = Database::query("INSERT INTO `files` (`name`, `real_name`, `user_id`)VALUES(?, ?, ?)", [$file['name'], $targetFileName, $profile->get("user_id")]);
+			}
+			else
+			{
+				echo "ERROR";
+			}
 		}
 		echo json_encode($addedFilesIds);
 	break;

@@ -62,3 +62,11 @@ INSERT INTO `users_groups_permitted` (`permit_id`, `group_id`, `permission_id`) 
 (6, 4, 2),
 (7, 5, 2),
 (8, 3, 2);
+
+
+ALTER TABLE `departments` AUTO_INCREMENT = 40;
+ALTER TABLE `departments_permitted` AUTO_INCREMENT = 14;
+ALTER TABLE `roles` AUTO_INCREMENT = 7;
+ALTER TABLE `users_groups` AUTO_INCREMENT = 6;
+ALTER TABLE `users_groups_permissions` AUTO_INCREMENT = 3;
+ALTER TABLE `users_groups_permitted` AUTO_INCREMENT = 9;

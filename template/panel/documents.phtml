@@ -45,7 +45,7 @@ switch($router->getAction())
 	break;
 	case 'create':
 	?>
-		<form class="p-2" id="documentsForm" method="post" action="<?=$router->url('create/'.$router->getParams(0))?>">
+		<form class="p-2" id="documentsForm" method="post" action="<?=$router->getRoute()?>">
 			<div class="row form-group">
 				<div class="col-xl-2 col-12"><span class="align-middle"><label><?=_("Document name")?>:</label></span></div>
 				<div class="col-xl-8 col-12"><input class="form-control" type="text" name="name" /></div>
@@ -204,7 +204,7 @@ switch($router->getAction())
 			<input class="form-control col-xl-10 col-8" type="search" name="search" placeholder="<?=_("Enter keywords in name or description of document")?>">
 			<input type="submit" class="btn btn-primary col-xl-2 col-4" value="<?=_('Search')?>"></form>
 		</form>
-		<a class="btn btn-primary col-xl-2 col-12 mt-1 mt-xl-0" href="<?=$router->url('create')?>"><?=_("Upload document")?></a>
+		<a class="btn btn-primary col-xl-2 col-12 mt-1 mt-xl-0" href="<?=$router->url('create'.($isPrivate?'/?private':null))?>"><?=_("Upload document")?></a>
 		</div>
 	</div>
 		<div class="m-2 documents-list">

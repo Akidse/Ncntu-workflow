@@ -112,11 +112,11 @@
 				<?if($profile->getDepartment()->getPermission('allow_decree')):?>
 					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/"><?=_("Create order")?></a></div>
 				<?endif;?>
-				<?if(!empty($profile->getDepartment()->getChildrens())):?>
+				<?if($profile->getDepartment()->getPermission('allow_decree')):?>
 					<div class="p-1"><a class="btn btn-primary btn-block" href="/document/new/"><?=_("Create prescription")?></a></div>
 				<?endif;?>
-				<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create', 'panel/letters')?>"><?=_("Create letter")?></a></div>
-				<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create/private', 'panel/documents')?>"><?=_("Upload document")?></a></div>
+					<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create', 'panel/letters')?>"><?=_("Create letter")?></a></div>
+					<div class="p-1"><a class="btn btn-primary btn-block" href="<?=$router->url('create/private', 'panel/documents')?>"><?=_("Upload document")?></a></div>
 			<?else:?>
 			<div class="alert alert-null-result"><?=_("You are not in any department")?></div>
 			<? endif;?>

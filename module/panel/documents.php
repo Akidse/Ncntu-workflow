@@ -114,7 +114,7 @@ switch($router->getAction())
 					$postHandler->get('mainFileId'), $postHandler->get('additionFilesId'), $sqlIsPrivate]);
 			$sessionAlerts->add(_("Document was created successfully"), 'success');
 			$logger->write('create document[id='.$documentId.']', $profile);
-			$router->redirect($router->url(($isPrivate?'private':null)));
+			$router->redirect($router->url(($isPrivate?'?private':null)));
 		}
 		else
 		{
@@ -265,7 +265,7 @@ switch($router->getAction())
 	$isSentToArchive = Database::query("SELECT COUNT(*) FROM `archive_requests` WHERE `document_id` = ? AND `type` = '0'", [$document['document_id']]);
 
 	Template::setTitle(_("Document view").' - '.$document['name']);
-	Template::setBackButtonUrl($router->url('/')); 
+	Template::setBackButtonUrl($router->url(($isPrivate?'?private':null))); 
 	if($versionMode)Template::setBackButtonUrl($router->url('/versions/'.$document['document_id'])); 
 
 	$toolbar = new Toolbar();

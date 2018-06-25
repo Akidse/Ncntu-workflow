@@ -21,7 +21,7 @@ switch($router->getAction())
 	if($postHandler->proceed())
 	{
 		if($postHandler->isValid()){
-			Database::query("UPDATE `users` SET `groups` = ?, `department_id` = ?", [$postHandler->get('groups'), $postHandler->get('department_id')]);
+			Database::query("UPDATE `users` SET `groups` = ?, `department_id` = ? WHERE `user_id` = ?", [$postHandler->get('groups'), $postHandler->get('department_id'), $user->get('user_id')]);
 			$user = new User($router->getParams(0));
 			$sessionAlerts->add(_("Changes saved successfully"), "success");
 		}
